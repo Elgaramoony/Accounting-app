@@ -1,0 +1,959 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="company-logo">
+            <i class="fas fa-calculator"></i>
+        </div>
+        <h2 id="sidebarCompanyName">النظام المحاسبي</h2>
+        <div class="company-name" id="sidebarCompanyName">شركة النخبة</div>
+        <div class="developer-badge">
+            <span>تصميم: نور الجرموني</span>
+        </div>
+    </div>
+    
+    <ul class="sidebar-menu">
+        <li><a href="#" data-page="dashboard" class="active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>لوحة التحكم</span>
+        </a></li>
+        
+        <li class="menu-section">إدارة العمليات</li>
+        <li><a href="#" data-page="invoices">
+            <i class="fas fa-file-invoice"></i>
+            <span>الفواتير</span>
+            <span class="menu-badge" id="invoicesBadge">0</span>
+        </a></li>
+        <li><a href="#" data-page="expenses">
+            <i class="fas fa-receipt"></i>
+            <span>المصروفات</span>
+            <span class="menu-badge" id="expensesBadge">0</span>
+        </a></li>
+        <li><a href="#" data-page="customers">
+            <i class="fas fa-users"></i>
+            <span>العملاء</span>
+            <span class="menu-badge" id="customersBadge">0</span>
+        </a></li>
+        
+        <li class="menu-section">الإدارة المالية</li>
+        <li><a href="#" data-page="reports">
+            <i class="fas fa-chart-bar"></i>
+            <span>التقارير</span>
+        </a></li>
+        <li><a href="#" data-page="analytics">
+            <i class="fas fa-chart-line"></i>
+            <span>التحليلات</span>
+        </a></li>
+        <li><a href="#" data-page="budget">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>الميزانية</span>
+        </a></li>
+        
+        <li class="menu-section">الإعدادات</li>
+        <li><a href="#" data-page="settings">
+            <i class="fas fa-cog"></i>
+            <span>الإعدادات</span>
+        </a></li>
+        <li><a href="#" data-page="backup">
+            <i class="fas fa-database"></i>
+            <span>النسخ الاحتياطي</span>
+        </a></li>
+        
+        <li><a href="#" onclick="Auth.logout()" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>تسجيل الخروج</span>
+        </a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+        <div class="user-menu">
+            <div class="user-avatar" id="userAvatar">ن</div>
+            <div class="user-details">
+                <div id="userName">نور الجرموني</div>
+                <div class="user-role">مطور النظام</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <!-- الشريط العلوي -->
+    <div class="header">
+        <div>
+            <h1>لوحة التحكم</h1>
+            <div class="breadcrumb">
+                <span>الرئيسية</span>
+                <i class="fas fa-chevron-left"></i>
+                <span>لوحة التحكم</span>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <div class="quick-actions">
+                <button class="btn btn-sm btn-primary" onclick="quickAction('addInvoice')">
+                    <i class="fas fa-plus"></i> فاتورة جديدة
+                </button>
+                <button class="btn btn-sm btn-success" onclick="quickAction('addExpense')">
+                    <i class="fas fa-receipt"></i> مصروف جديد
+                </button>
+                <button class="btn btn-sm btn-warning" onclick="quickAction('addCustomer')">
+                    <i class="fas fa-user-plus"></i> عميل جديد
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-welcome">
+                    <span>مرحباً، </span>
+                    <strong id="headerUserName">نور الجرموني</strong>
+                </div>
+                <div class="current-time" id="currentTime">--:--:--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- بطاقات الإحصائيات -->
+    <div class="cards">
+        <div class="card revenue">
+            <div class="card-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="card-content">
+                <h3>إجمالي الإيرادات</h3>
+                <div class="amount" id="totalRevenue">0 ر.س</div>
+                <div class="trend up" id="revenueTrend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>0%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card expenses">
+            <div class="card-icon">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <div class="card-content">
+                <h3>إجمالي المصروفات</h3>
+                <div class="amount" id="totalExpenses">0 ر.س</div>
+                <div class="trend down" id="expensesTrend">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>0%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card profit">
+            <div class="card-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="card-content">
+                <h3>صافي الربح</h3>
+                <div class="amount" id="netProfit">0 ر.س</div>
+                <div class="trend up" id="profitTrend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>0%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card customers">
+            <div class="card-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="card-content">
+                <h3>عدد العملاء</h3>
+                <div class="amount" id="totalCustomers">0</div>
+                <div class="trend up" id="customersTrend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الرسوم البيانية -->
+    <div class="row" style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-bottom: 25px;">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>الإيرادات والمصروفات - آخر 6 أشهر</h3>
+                <div class="chart-actions">
+                    <select id="chartPeriod" class="form-control" style="width: auto;">
+                        <option value="6">6 أشهر</option>
+                        <option value="12">12 شهر</option>
+                    </select>
+                    <button class="btn btn-sm" onclick="refreshCharts()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <canvas id="revenueExpenseChart" height="300"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>توزيع المصروفات</h3>
+            </div>
+            <canvas id="expensesChart" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- الرؤى الذكية -->
+    <div class="ai-insights-container" id="aiInsightsContainer" style="display: none;">
+        <div class="chart-header">
+            <h3><i class="fas fa-brain"></i> الرؤى الذكية</h3>
+            <button class="btn btn-sm btn-primary" onclick="AISystem.generateInsights()">
+                <i class="fas fa-magic"></i> تحديث الرؤى
+            </button>
+        </div>
+        <div class="insights-grid" id="insightsGrid">
+            <!-- سيتم ملء الرؤى هنا -->
+        </div>
+    </div>
+
+    <!-- الجداول السريعة -->
+    <div class="row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+        <div class="table-container">
+            <div class="table-header">
+                <h3>آخر الفواتير</h3>
+                <a href="#" data-page="invoices" class="view-all-link">عرض الكل</a>
+            </div>
+            <table id="recentInvoices">
+                <thead>
+                    <tr>
+                        <th>رقم الفاتورة</th>
+                        <th>العميل</th>
+                        <th>التاريخ</th>
+                        <th>المبلغ</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- سيتم ملء الجدول بالبيانات -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3>آخر المصروفات</h3>
+                <a href="#" data-page="expenses" class="view-all-link">عرض الكل</a>
+            </div>
+            <table id="recentExpenses">
+                <thead>
+                    <tr>
+                        <th>الوصف</th>
+                        <th>التصنيف</th>
+                        <th>التاريخ</th>
+                        <th>المبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- سيتم ملء الجدول بالبيانات -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- النشاطات الأخيرة -->
+    <div class="table-container" style="margin-top: 25px;">
+        <div class="table-header">
+            <h3>النشاطات الأخيرة</h3>
+        </div>
+        <table id="recentActivities">
+            <thead>
+                <tr>
+                    <th>النشاط</th>
+                    <th>الوصف</th>
+                    <th>التاريخ</th>
+                    <th>الوقت</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- سيتم ملء الجدول بالبيانات -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+/* تحسينات الشريط الجانبي */
+.company-logo {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin: 0 auto 10px;
+}
+
+.developer-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.menu-section {
+    padding: 15px 20px 5px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.menu-badge {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    margin-right: auto;
+}
+
+.logout-btn {
+    color: #e74c3c !important;
+}
+
+.logout-btn:hover {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+/* تحسينات البطاقات */
+.card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+.card.revenue .card-icon { background: rgba(39, 174, 96, 0.1); color: var(--success-color); }
+.card.expenses .card-icon { background: rgba(231, 76, 60, 0.1); color: var(--danger-color); }
+.card.profit .card-icon { background: rgba(52, 152, 219, 0.1); color: var(--primary-color); }
+.card.customers .card-icon { background: rgba(243, 156, 18, 0.1); color: var(--warning-color); }
+
+.card-content {
+    flex: 1;
+}
+
+/* الرؤى الذكية */
+.ai-insights-container {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.insight-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border-right: 4px solid var(--primary-color);
+}
+
+.insight-card.positive { border-right-color: var(--success-color); }
+.insight-card.negative { border-right-color: var(--danger-color); }
+.insight-card.warning { border-right-color: var(--warning-color); }
+
+.insight-card h4 {
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.insight-card p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* الشريط العلوي */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.user-welcome {
+    text-align: left;
+}
+
+.current-time {
+    font-size: 12px;
+    color: #7f8c8d;
+    text-align: left;
+}
+
+.view-all-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* الوضع الليلي */
+.dark-mode .ai-insights-container {
+    background: var(--surface-dark);
+}
+
+.dark-mode .insight-card {
+    background: var(--surface-dark-2);
+}
+
+.dark-mode .insight-card p {
+    color: var(--text-secondary-dark);
+}
+</style>
+
+<script>
+// لوحة التحكم
+const dashboardPage = {
+    charts: {},
+    insights: [],
+
+    async init() {
+        await this.loadUserInfo();
+        await this.loadDashboardData();
+        await this.loadCharts();
+        await this.loadAIInsights();
+        this.setupRealTimeUpdates();
+        this.startClock();
+    },
+
+    async loadUserInfo() {
+        const user = Auth.getCurrentUser();
+        if (user) {
+            document.getElementById('userName').textContent = user.companyName || 'مدير النظام';
+            document.getElementById('headerUserName').textContent = user.companyName || 'مدير النظام';
+            document.getElementById('sidebarCompanyName').textContent = user.companyName || 'شركتي';
+            
+            // إنشاء الأحرف الأولى للصورة الرمزية
+            const initials = user.companyName ? 
+                user.companyName.split(' ').map(n => n[0]).join('') : 'AD';
+            document.getElementById('userAvatar').textContent = initials.substring(0, 2).toUpperCase();
+        }
+    },
+
+    async loadDashboardData() {
+        await this.loadStatistics();
+        await this.loadRecentInvoices();
+        await this.loadRecentExpenses();
+        await this.loadRecentActivities();
+        await this.updateMenuBadges();
+    },
+
+    async loadStatistics() {
+        try {
+            const stats = await AccountingDB.getFinancialStats(
+                new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1),
+                new Date()
+            );
+
+            const previousStats = await AccountingDB.getFinancialStats(
+                new Date(new Date().getFullYear(), new Date().getMonth() - 12, 1),
+                new Date(new Date().getFullYear(), new Date().getMonth() - 6, 0)
+            );
+
+            // تحديث الإحصائيات
+            document.getElementById('totalRevenue').textContent = AccountingUtils.formatCurrency(stats.totalRevenue);
+            document.getElementById('totalExpenses').textContent = AccountingUtils.formatCurrency(stats.totalExpenses);
+            document.getElementById('netProfit').textContent = AccountingUtils.formatCurrency(stats.netProfit);
+            document.getElementById('totalCustomers').textContent = stats.customerCount || 0;
+
+            // تحديث المؤشرات
+            this.updateTrend('revenueTrend', stats.totalRevenue, previousStats.totalRevenue);
+            this.updateTrend('expensesTrend', stats.totalExpenses, previousStats.totalExpenses);
+            this.updateTrend('profitTrend', stats.netProfit, previousStats.netProfit);
+            this.updateTrend('customersTrend', stats.customerCount, previousStats.customerCount);
+
+        } catch (error) {
+            console.error('Error loading statistics:', error);
+        }
+    },
+
+    updateTrend(elementId, current, previous) {
+        const element = document.getElementById(elementId);
+        const trend = previous !== 0 ? ((current - previous) / previous) * 100 : 0;
+        
+        element.innerHTML = '';
+        
+        if (trend > 0) {
+            element.className = 'trend up';
+            element.innerHTML = `<i class="fas fa-arrow-up"></i> <span>${Math.abs(trend).toFixed(1)}%</span>`;
+        } else if (trend < 0) {
+            element.className = 'trend down';
+            element.innerHTML = `<i class="fas fa-arrow-down"></i> <span>${Math.abs(trend).toFixed(1)}%</span>`;
+        } else {
+            element.className = 'trend';
+            element.innerHTML = `<i class="fas fa-minus"></i> <span>0%</span>`;
+        }
+    },
+
+    async loadRecentInvoices() {
+        try {
+            const invoices = await AccountingDB.getAll('invoices');
+            const recentInvoices = invoices
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+
+            const tbody = document.querySelector('#recentInvoices tbody');
+            tbody.innerHTML = '';
+
+            if (recentInvoices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #7f8c8d;">لا توجد فواتير</td></tr>';
+                return;
+            }
+
+            recentInvoices.forEach(invoice => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <a href="#" onclick="invoicesPage.viewInvoice('${invoice.id}')" class="invoice-link">
+                            ${invoice.invoiceNumber}
+                        </a>
+                    </td>
+                    <td>${invoice.customerName}</td>
+                    <td>${AccountingUtils.formatDate(invoice.date)}</td>
+                    <td>${AccountingUtils.formatCurrency(invoice.total)}</td>
+                    <td>
+                        <span class="status ${invoice.status}">
+                            ${this.getStatusText(invoice.status)}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error('Error loading recent invoices:', error);
+        }
+    },
+
+    async loadRecentExpenses() {
+        try {
+            const expenses = await AccountingDB.getAll('expenses');
+            const recentExpenses = expenses
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+
+            const tbody = document.querySelector('#recentExpenses tbody');
+            tbody.innerHTML = '';
+
+            if (recentExpenses.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #7f8c8d;">لا توجد مصروفات</td></tr>';
+                return;
+            }
+
+            recentExpenses.forEach(expense => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${expense.description}</td>
+                    <td>
+                        <span class="status" style="background: ${this.getCategoryColor(expense.category)}">
+                            ${expense.category}
+                        </span>
+                    </td>
+                    <td>${AccountingUtils.formatDate(expense.date)}</td>
+                    <td>${AccountingUtils.formatCurrency(expense.amount)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error('Error loading recent expenses:', error);
+        }
+    },
+
+    async loadRecentActivities() {
+        try {
+            const activities = await AccountingDB.getAll('activities');
+            const recentActivities = activities
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 10);
+
+            const tbody = document.querySelector('#recentActivities tbody');
+            tbody.innerHTML = '';
+
+            if (recentActivities.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #7f8c8d;">لا توجد نشاطات</td></tr>';
+                return;
+            }
+
+            recentActivities.forEach(activity => {
+                const date = new Date(activity.timestamp);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <span class="activity-badge">${activity.action}</span>
+                    </td>
+                    <td>${activity.description}</td>
+                    <td>${date.toLocaleDateString('ar-SA')}</td>
+                    <td>${date.toLocaleTimeString('ar-SA')}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error('Error loading recent activities:', error);
+        }
+    },
+
+    async loadCharts() {
+        await this.loadRevenueExpenseChart();
+        await this.loadExpensesChart();
+    },
+
+    async loadRevenueExpenseChart() {
+        const ctx = document.getElementById('revenueExpenseChart').getContext('2d');
+        const period = parseInt(document.getElementById('chartPeriod').value) || 6;
+        
+        if (this.charts.revenueExpense) {
+            this.charts.revenueExpense.destroy();
+        }
+
+        const data = await this.getChartData(period);
+        
+        this.charts.revenueExpense = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'الإيرادات',
+                        data: data.revenues,
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'المصروفات',
+                        data: data.expenses,
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        rtl: true,
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                family: 'Segoe UI, Tahoma, sans-serif'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        rtl: true,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${AccountingUtils.formatCurrency(context.raw)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Segoe UI, Tahoma, sans-serif'
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return AccountingUtils.formatCurrency(value);
+                            },
+                            font: {
+                                family: 'Segoe UI, Tahoma, sans-serif'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    async loadExpensesChart() {
+        const ctx = document.getElementById('expensesChart').getContext('2d');
+        
+        if (this.charts.expenses) {
+            this.charts.expenses.destroy();
+        }
+
+        const data = await this.getExpensesChartData();
+        
+        this.charts.expenses = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.values,
+                    backgroundColor: [
+                        '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+                        '#1abc9c', '#34495e', '#e67e22', '#95a5a6'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'left',
+                        rtl: true,
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            font: {
+                                family: 'Segoe UI, Tahoma, sans-serif'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        rtl: true,
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${AccountingUtils.formatCurrency(value)} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    async getChartData(months) {
+        const invoices = await AccountingDB.getAll('invoices');
+        const expenses = await AccountingDB.getAll('expenses');
+        
+        const labels = [];
+        const revenues = [];
+        const expensesData = [];
+        
+        const now = new Date();
+        
+        for (let i = months - 1; i >= 0; i--) {
+            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const monthName = date.toLocaleDateString('ar-SA', { month: 'long' });
+            const year = date.getFullYear();
+            labels.push(`${monthName} ${year}`);
+            
+            // حساب الإيرادات للشهر
+            const monthRevenue = invoices
+                .filter(inv => {
+                    const invDate = new Date(inv.date);
+                    return invDate.getMonth() === date.getMonth() && 
+                           invDate.getFullYear() === date.getFullYear();
+                })
+                .reduce((sum, inv) => sum + inv.total, 0);
+            revenues.push(monthRevenue);
+            
+            // حساب المصروفات للشهر
+            const monthExpenses = expenses
+                .filter(exp => {
+                    const expDate = new Date(exp.date);
+                    return expDate.getMonth() === date.getMonth() && 
+                           expDate.getFullYear() === date.getFullYear();
+                })
+                .reduce((sum, exp) => sum + exp.amount, 0);
+            expensesData.push(monthExpenses);
+        }
+        
+        return { labels, revenues, expenses: expensesData };
+    },
+
+    async getExpensesChartData() {
+        const expenses = await AccountingDB.getAll('expenses');
+        
+        const categoryTotals = {};
+        expenses.forEach(exp => {
+            categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+        });
+
+        return {
+            labels: Object.keys(categoryTotals),
+            values: Object.values(categoryTotals)
+        };
+    },
+
+    async loadAIInsights() {
+        if (AppConfig.ai.enabled) {
+            try {
+                const insights = await AISystem.getDashboardInsights();
+                this.displayInsights(insights);
+                document.getElementById('aiInsightsContainer').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading AI insights:', error);
+            }
+        }
+    },
+
+    displayInsights(insights) {
+        const container = document.getElementById('insightsGrid');
+        container.innerHTML = '';
+
+        [...insights.insights, ...insights.anomalies].forEach(insight => {
+            const insightCard = document.createElement('div');
+            insightCard.className = `insight-card ${insight.type}`;
+            insightCard.innerHTML = `
+                <h4>
+                    <i class="fas fa-${this.getInsightIcon(insight.type)}"></i>
+                    ${insight.title}
+                </h4>
+                <p>${insight.description}</p>
+                ${insight.suggestion ? `<div class="suggestion">${insight.suggestion}</div>` : ''}
+            `;
+            container.appendChild(insightCard);
+        });
+    },
+
+    getInsightIcon(type) {
+        const icons = {
+            'positive': 'check-circle',
+            'negative': 'exclamation-triangle',
+            'warning': 'exclamation-circle',
+            'high': 'fire'
+        };
+        return icons[type] || 'info-circle';
+    },
+
+    async updateMenuBadges() {
+        try {
+            const invoices = await AccountingDB.getAll('invoices');
+            const expenses = await AccountingDB.getAll('expenses');
+            const customers = await AccountingDB.getAll('customers');
+
+            document.getElementById('invoicesBadge').textContent = invoices.length;
+            document.getElementById('expensesBadge').textContent = expenses.length;
+            document.getElementById('customersBadge').textContent = customers.length;
+
+        } catch (error) {
+            console.error('Error updating menu badges:', error);
+        }
+    },
+
+    setupRealTimeUpdates() {
+        // تحديث البيانات كل 30 ثانية
+        setInterval(() => {
+            this.loadDashboardData();
+        }, 30000);
+
+        // تحديث الساعة كل ثانية
+        setInterval(() => {
+            this.updateClock();
+        }, 1000);
+    },
+
+    startClock() {
+        this.updateClock();
+    },
+
+    updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('ar-SA', {
+            hour12: true,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        document.getElementById('currentTime').textContent = timeString;
+    },
+
+    getStatusText(status) {
+        const statusMap = {
+            'paid': 'مدفوعة',
+            'unpaid': 'غير مدفوعة',
+            'partial': 'جزئي'
+        };
+        return statusMap[status] || status;
+    },
+
+    getCategoryColor(category) {
+        const colors = {
+            'رواتب': '#e74c3c',
+            'إيجار': '#3498db',
+            'مرافق': '#2ecc71',
+            'تسويق': '#f39c12',
+            'نقل': '#9b59b6',
+            'صيانة': '#1abc9c',
+            'أخرى': '#95a5a6'
+        };
+        return colors[category] || '#95a5a6';
+    }
+};
+
+// دوال سريعة
+function quickAction(action) {
+    switch(action) {
+        case 'addInvoice':
+            accountingApp.loadPage('invoices');
+            setTimeout(() => {
+                if (window.invoicesPage) invoicesPage.showInvoiceForm();
+            }, 500);
+            break;
+        case 'addExpense':
+            accountingApp.loadPage('expenses');
+            setTimeout(() => {
+                if (window.expensesPage) expensesPage.showExpenseForm();
+            }, 500);
+            break;
+        case 'addCustomer':
+            accountingApp.loadPage('customers');
+            setTimeout(() => {
+                if (window.customersPage) customersPage.showCustomerForm();
+            }, 500);
+            break;
+    }
+}
+
+function refreshCharts() {
+    dashboardPage.loadCharts();
+    window.accountingApp.showNotification('تم تحديث الرسوم البيانية', 'success');
+}
+</script>

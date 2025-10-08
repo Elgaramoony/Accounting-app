@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المخزون - النظام المحاسبي</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/inventory.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- الشريط الجانبي (نفس الهيكل) -->
+        <div class="sidebar">...</div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1>إدارة المخزون</h1>
+                    <div class="breadcrumb">
+                        <span>الرئيسية</span>
+                        <i class="fas fa-chevron-left"></i>
+                        <span>المخزون</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <button class="btn btn-primary" onclick="inventoryPage.showProductForm()">
+                        <i class="fas fa-plus"></i> منتج جديد
+                    </button>
+                    <button class="btn btn-success" onclick="inventoryPage.importProducts()">
+                        <i class="fas fa-upload"></i> استيراد
+                    </button>
+                    <button class="btn btn-info" onclick="inventoryPage.showStockAdjustment()">
+                        <i class="fas fa-edit"></i> تعديل المخزون
+                    </button>
+                </div>
+            </div>
+
+            <!-- بطاقات المخزون -->
+            <div class="cards">
+                <div class="card">
+                    <h3>إجمالي المنتجات</h3>
+                    <div class="amount" id="totalProducts">0</div>
+                    <div class="sub-text">منتج</div>
+                </div>
+                <div class="card revenue">
+                    <h3>قيمة المخزون</h3>
+                    <div class="amount" id="inventoryValue">0 ر.س</div>
+                    <div class="trend up">+5%</div>
+                </div>
+                <div class="card success">
+                    <h3>منتجات منخفضة</h3>
+                    <div class="amount" id="lowStockItems">0</div>
+                    <div class="sub-text">تحت الحد الأدنى</div>
+                </div>
+                <div class="card warning">
+                    <h3>منتجات منتهية</h3>
+                    <div class="amount" id="outOfStockItems">0</div>
+                    <div class="sub-text">نفذت من المخزون</div>
+                </div>
+            </div>
+
+            <!-- شريط التصفية -->
+            <div class="filter-bar">
+                <div class="search-box">
+                    <input type="text" id="inventorySearch" placeholder="بحث في المنتجات...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <select id="categoryFilter" class="form-control">
+                    <option value="">جميع الفئات</option>
+                    <option value="electronics">إلكترونيات</option>
+                    <option value="office">مكتب</option>
+                    <option value="supplies">لوازم</option>
+                </select>
+                <select id="stockStatusFilter" class="form-control">
+                    <option value="">جميع الحالات</option>
+                    <option value="in_stock">متوفر</option>
+                    <option value="low_stock">منخفض</option>
+                    <option value="out_of_stock">منتهي</option>
+                </select>
+            </div>
+
+            <!-- جدول المنتجات -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>قائمة المنتجات</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-sm" onclick="inventoryPage.exportProducts()">
+                            <i class="fas fa-download"></i> تصدير
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="inventoryPage.bulkDelete()">
+                            <i class="fas fa-trash"></i> حذف متعدد
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th width="50">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th width="80">الصورة</th>
+                                <th>المنتج</th>
+                                <th>SKU</th>
+                                <th>الفئة</th>
+                                <th>سعر البيع</th>
+                                <th>سعر التكلفة</th>
+                                <th>المخزون</th>
+                                <th>الحالة</th>
+                                <th width="150">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryData">
+                            <!-- سيتم ملء البيانات -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-footer">
+                    <div class="table-info">عرض 1-10 من 50 عنصر</div>
+                    <div class="pagination">
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج المنتج -->
+    <div id="productModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 id="productModalTitle">منتج جديد</h3>
+                <button class="close" onclick="inventoryPage.closeProductForm()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">اسم المنتج *</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productSKU">كود المنتج (SKU) *</label>
+                            <input type="text" id="productSKU" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productCategory">الفئة *</label>
+                            <select id="productCategory" required>
+                                <option value="">اختر الفئة</option>
+                                <option value="electronics">إلكترونيات</option>
+                                <option value="office">مكتب</option>
+                                <option value="supplies">لوازم</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productBarcode">الباركود</label>
+                            <input type="text" id="productBarcode">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="purchasePrice">سعر الشراء *</label>
+                            <input type="number" id="purchasePrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePrice">سعر البيع *</label>
+                            <input type="number" id="salePrice" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currentStock">الكمية في المخزون *</label>
+                            <input type="number" id="currentStock" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="minStock">الحد الأدنى للمخزون</label>
+                            <input type="number" id="minStock" value="5">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productDescription">وصف المنتج</label>
+                        <textarea id="productDescription" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="inventoryPage.saveProduct()">
+                            <i class="fas fa-save"></i> حفظ المنتج
+                        </button>
+                        <button type="button" class="btn" onclick="inventoryPage.closeProductForm()">
+                            إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/inventory.js"></script>
+</body>
+</html>

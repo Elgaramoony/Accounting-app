@@ -1,0 +1,1091 @@
+<div class="header">
+    <div>
+        <h1>إدارة العملاء</h1>
+        <div class="breadcrumb">
+            <span>الرئيسية</span>
+            <i class="fas fa-chevron-left"></i>
+            <span>العملاء</span>
+        </div>
+    </div>
+    <div class="user-info">
+        <button class="btn btn-primary" onclick="customersPage.showCustomerForm()">
+            <i class="fas fa-plus"></i> عميل جديد
+        </button>
+        <button class="btn btn-success" onclick="customersPage.exportCustomers()">
+            <i class="fas fa-download"></i> تصدير
+        </button>
+    </div>
+</div>
+
+<!-- شريط التصفية والبحث -->
+<div class="filter-bar">
+    <div class="search-box">
+        <input type="text" id="customerSearch" placeholder="بحث في العملاء..." 
+               onkeyup="filterTable('customersTable', this.value)">
+        <i class="fas fa-search"></i>
+    </div>
+    
+    <select id="typeFilter" class="form-control" onchange="customersPage.filterCustomers()">
+        <option value="">جميع الأنواع</option>
+        <option value="فرد">فرد</option>
+        <option value="شركة">شركة</option>
+        <option value="حكومي">حكومي</option>
+    </select>
+    
+    <select id="statusFilter" class="form-control" onchange="customersPage.filterCustomers()">
+        <option value="">جميع الحالات</option>
+        <option value="نشط">نشط</option>
+        <option value="غير نشط">غير نشط</option>
+        <option value="معلق">معلق</option>
+    </select>
+    
+    <button class="btn btn-info" onclick="customersPage.showAdvancedFilters()">
+        <i class="fas fa-filter"></i> تصفية متقدم
+    </button>
+</div>
+
+<!-- إحصائيات سريعة -->
+<div class="cards">
+    <div class="card">
+        <h3>إجمالي العملاء</h3>
+        <div class="amount" id="totalCustomers">0</div>
+        <div class="trend up" id="customersTrend">+0%</div>
+    </div>
+    <div class="card revenue">
+        <h3>العملاء النشطين</h3>
+        <div class="amount" id="activeCustomers">0</div>
+        <div class="sub-text" id="activePercent">0%</div>
+    </div>
+    <div class="card success">
+        <h3>إجمالي المدينون</h3>
+        <div class="amount" id="totalDebt">0 ر.س</div>
+        <div class="sub-text">من جميع العملاء</div>
+    </div>
+    <div class="card warning">
+        <h3>عملاء متأخرين</h3>
+        <div class="amount" id="overdueCustomers">0</div>
+        <div class="sub-text">في السداد</div>
+    </div>
+</div>
+
+<!-- مخطط توزيع العملاء -->
+<div class="chart-container">
+    <div class="chart-header">
+        <h3>توزيع العملاء حسب النوع</h3>
+        <div class="chart-actions">
+            <button class="btn btn-sm" onclick="customersPage.exportChart()">
+                <i class="fas fa-download"></i> تصدير المخطط
+            </button>
+        </div>
+    </div>
+    <div class="chart-wrapper">
+        <canvas id="customersChart"></canvas>
+    </div>
+</div>
+
+<!-- جدول العملاء -->
+<div class="table-container">
+    <div class="table-header">
+        <h3>قائمة العملاء</h3>
+        <div class="table-actions">
+            <button class="btn btn-sm" onclick="customersPage.sendBulkEmail()">
+                <i class="fas fa-envelope"></i> إرسال بريد
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="customersPage.bulkDelete()">
+                <i class="fas fa-trash"></i> حذف متعدد
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table id="customersTable">
+            <thead>
+                <tr>
+                    <th width="50">
+                        <input type="checkbox" id="selectAll" onchange="customersPage.toggleSelectAll()">
+                    </th>
+                    <th>العميل</th>
+                    <th>النوع</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الهاتف</th>
+                    <th>إجمالي المشتريات</th>
+                    <th>رصيد الدين</th>
+                    <th>الحالة</th>
+                    <th width="150">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- سيتم ملء الجدول بالبيانات -->
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="table-footer">
+        <div class="table-info" id="tableInfo">
+            عرض 0 من 0 عنصر
+        </div>
+        <div class="pagination" id="pagination">
+            <!-- سيتم إضافة أرقام الصفحات هنا -->
+        </div>
+    </div>
+</div>
+
+<!-- نموذج العميل -->
+<div id="customerModal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3 id="customerModalTitle">عميل جديد</h3>
+            <button class="close" onclick="customersPage.closeCustomerForm()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="customerForm">
+                <input type="hidden" id="customerId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerName">اسم العميل *</label>
+                        <input type="text" id="customerName" required placeholder="اسم العميل الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerType">نوع العميل *</label>
+                        <select id="customerType" required>
+                            <option value="">اختر النوع</option>
+                            <option value="فرد">فرد</option>
+                            <option value="شركة">شركة</option>
+                            <option value="حكومي">جهة حكومية</option>
+                            <option value="منظمة">منظمة غير ربحية</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerEmail">البريد الإلكتروني</label>
+                        <input type="email" id="customerEmail" placeholder="example@domain.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">رقم الهاتف *</label>
+                        <input type="tel" id="customerPhone" required placeholder="05XXXXXXXX">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerTaxNumber">الرقم الضريبي</label>
+                        <input type="text" id="customerTaxNumber" placeholder="الرقم الضريبي للعميل">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerCommercialNumber">السجل التجاري</label>
+                        <input type="text" id="customerCommercialNumber" placeholder="رقم السجل التجاري">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerAddress">العنوان</label>
+                    <textarea id="customerAddress" rows="2" placeholder="العنوان الكامل..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerCity">المدينة</label>
+                        <input type="text" id="customerCity" placeholder="المدينة">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerCountry">الدولة</label>
+                        <input type="text" id="customerCountry" placeholder="الدولة" value="المملكة العربية السعودية">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerStatus">حالة العميل</label>
+                        <select id="customerStatus">
+                            <option value="نشط">نشط</option>
+                            <option value="غير نشط">غير نشط</option>
+                            <option value="معلق">معلق</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerCreditLimit">حد الائتمان (ر.س)</label>
+                        <input type="number" id="customerCreditLimit" step="0.01" min="0" placeholder="الحد الأقصى للائتمان">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerNotes">ملاحظات</label>
+                    <textarea id="customerNotes" rows="3" placeholder="ملاحظات إضافية عن العميل..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="customersPage.saveCustomer()">
+                        <i class="fas fa-save"></i> حفظ العميل
+                    </button>
+                    <button type="button" class="btn" onclick="customersPage.closeCustomerForm()">
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- نموذج عرض تفاصيل العميل -->
+<div id="customerDetailsModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-header">
+            <h3 id="customerDetailsTitle">تفاصيل العميل</h3>
+            <button class="close" onclick="customersPage.closeCustomerDetails()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="customerDetailsContent">
+                <!-- سيتم ملء المحتوى بالبيانات -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- تصفية متقدم -->
+<div id="advancedFilterModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3>تصفية متقدم للعملاء</h3>
+            <button class="close" onclick="customersPage.closeAdvancedFilters()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="filterDebtFrom">الدين من</label>
+                    <input type="number" id="filterDebtFrom" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="filterDebtTo">الدين إلى</label>
+                    <input type="number" id="filterDebtTo" step="0.01" min="0">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="filterCity">المدينة</label>
+                    <input type="text" id="filterCity" placeholder="اسم المدينة...">
+                </div>
+                <div class="form-group">
+                    <label for="filterCountry">الدولة</label>
+                    <input type="text" id="filterCountry" placeholder="اسم الدولة...">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="filterRegistrationDate">تاريخ التسجيل</label>
+                <input type="month" id="filterRegistrationDate">
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="filterHasCredit">
+                    عملاء بحد ائتمان فقط
+                </label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="customersPage.applyAdvancedFilters()">
+                    تطبيق التصفية
+                </button>
+                <button type="button" class="btn" onclick="customersPage.resetAdvancedFilters()">
+                    إعادة تعيين
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.customer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.customer-name {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.customer-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.badge-company {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.badge-government {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+.badge-individual {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.credit-limit {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.customer-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.stat-card {
+    background: var(--surface);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 5px 0;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* الوضع الليلي */
+.dark-mode .customer-badge.badge-company {
+    background: rgba(33, 150, 243, 0.2);
+    color: #64b5f6;
+}
+
+.dark-mode .customer-badge.badge-government {
+    background: rgba(76, 175, 80, 0.2);
+    color: #81c784;
+}
+
+.dark-mode .customer-badge.badge-individual {
+    background: rgba(156, 39, 176, 0.2);
+    color: #ba68c8;
+}
+
+.dark-mode .stat-card {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+</style>
+
+<script>
+// إدارة العملاء
+const customersPage = {
+    currentCustomer: null,
+    selectedCustomers: new Set(),
+    currentPage: 1,
+    itemsPerPage: 10,
+    filters: {},
+    chart: null,
+
+    async init() {
+        await this.loadCustomers();
+        await this.loadQuickStats();
+        await this.initChart();
+        this.setupEventListeners();
+    },
+
+    async loadCustomers() {
+        try {
+            const customers = await AccountingDB.getAll('customers');
+            this.displayCustomers(customers);
+            this.updatePagination(customers.length);
+        } catch (error) {
+            console.error('Error loading customers:', error);
+            this.showError('فشل في تحميل العملاء');
+        }
+    },
+
+    displayCustomers(customers) {
+        const tbody = document.querySelector('#customersTable tbody');
+        tbody.innerHTML = '';
+
+        // تطبيق الفلاتر
+        let filteredCustomers = this.applyFilters(customers);
+        
+        // التصفية حسب الصفحة
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const pagedCustomers = filteredCustomers.slice(startIndex, endIndex);
+
+        if (pagedCustomers.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 40px; color: #7f8c8d;">
+                        <i class="fas fa-users" style="font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5;"></i>
+                        لا توجد عملاء
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        pagedCustomers.forEach(customer => {
+            const totalPurchases = customer.totalPurchases || 0;
+            const currentDebt = customer.currentDebt || 0;
+            const creditLimit = customer.creditLimit || 0;
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <input type="checkbox" value="${customer.id}" 
+                           onchange="customersPage.toggleCustomerSelection('${customer.id}')"
+                           ${this.selectedCustomers.has(customer.id) ? 'checked' : ''}>
+                </td>
+                <td>
+                    <div class="customer-info">
+                        <div class="customer-avatar">
+                            ${customer.name.charAt(0)}
+                        </div>
+                        <div>
+                            <div class="customer-name">${customer.name}</div>
+                            <div>
+                                <span class="customer-badge badge-${customer.type === 'شركة' ? 'company' : customer.type === 'حكومي' ? 'government' : 'individual'}">
+                                    ${customer.type}
+                                </span>
+                                ${creditLimit > 0 ? `<span style="font-size: 11px; color: #7f8c8d;">حد ائتمان: ${AccountingUtils.formatCurrency(creditLimit)}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>${customer.type}</td>
+                <td>
+                    ${customer.email ? `
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-envelope" style="color: #7f8c8d;"></i>
+                            ${customer.email}
+                        </div>
+                    ` : '-'}
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-phone" style="color: #7f8c8d;"></i>
+                        ${customer.phone}
+                    </div>
+                </td>
+                <td>${AccountingUtils.formatCurrency(totalPurchases)}</td>
+                <td>
+                    <span style="color: ${currentDebt > 0 ? '#e74c3c' : '#27ae60'}; font-weight: bold;">
+                        ${AccountingUtils.formatCurrency(currentDebt)}
+                    </span>
+                    ${currentDebt > creditLimit && creditLimit > 0 ? '<i class="fas fa-exclamation-triangle" style="color: #e74c3c; margin-right: 5px;" title="تجاوز حد الائتمان"></i>' : ''}
+                </td>
+                <td>
+                    <span class="status ${customer.status === 'نشط' ? 'success' : customer.status === 'معلق' ? 'warning' : 'danger'}">
+                        ${customer.status}
+                    </span>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-sm" onclick="customersPage.viewCustomer('${customer.id}')" title="عرض التفاصيل">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm" onclick="customersPage.editCustomer('${customer.id}')" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-info btn-sm" onclick="customersPage.sendEmail('${customer.id}')" title="إرسال بريد">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="customersPage.deleteCustomer('${customer.id}')" title="حذف">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // تحديث معلومات الجدول
+        this.updateTableInfo(filteredCustomers.length);
+    },
+
+    applyFilters(customers) {
+        let filtered = [...customers];
+
+        // فلترة حسب النوع
+        if (this.filters.type) {
+            filtered = filtered.filter(cust => cust.type === this.filters.type);
+        }
+
+        // فلترة حسب الحالة
+        if (this.filters.status) {
+            filtered = filtered.filter(cust => cust.status === this.filters.status);
+        }
+
+        // فلترة حسب الدين
+        if (this.filters.debtFrom) {
+            filtered = filtered.filter(cust => (cust.currentDebt || 0) >= parseFloat(this.filters.debtFrom));
+        }
+        if (this.filters.debtTo) {
+            filtered = filtered.filter(cust => (cust.currentDebt || 0) <= parseFloat(this.filters.debtTo));
+        }
+
+        // فلترة حسب المدينة
+        if (this.filters.city) {
+            filtered = filtered.filter(cust => 
+                cust.city?.toLowerCase().includes(this.filters.city.toLowerCase()));
+        }
+
+        // فلترة حسب الدولة
+        if (this.filters.country) {
+            filtered = filtered.filter(cust => 
+                cust.country?.toLowerCase().includes(this.filters.country.toLowerCase()));
+        }
+
+        // فلترة حسب تاريخ التسجيل
+        if (this.filters.registrationDate) {
+            filtered = filtered.filter(cust => {
+                const regDate = new Date(cust.createdAt);
+                const filterDate = new Date(this.filters.registrationDate);
+                return regDate.getMonth() === filterDate.getMonth() && 
+                       regDate.getFullYear() === filterDate.getFullYear();
+            });
+        }
+
+        // فلترة العملاء بحد ائتمان
+        if (this.filters.hasCredit) {
+            filtered = filtered.filter(cust => (cust.creditLimit || 0) > 0);
+        }
+
+        // ترتيب حسب الأحدث
+        return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    },
+
+    async loadQuickStats() {
+        try {
+            const customers = await AccountingDB.getAll('customers');
+            const invoices = await AccountingDB.getAll('invoices');
+            
+            const totalCustomers = customers.length;
+            const activeCustomers = customers.filter(cust => cust.status === 'نشط').length;
+            const activePercent = totalCustomers > 0 ? Math.round((activeCustomers / totalCustomers) * 100) : 0;
+            
+            // حساب إجمالي الدين من الفواتير غير المدفوعة
+            const totalDebt = invoices
+                .filter(inv => inv.status !== 'paid')
+                .reduce((sum, inv) => sum + (inv.balance || 0), 0);
+            
+            // حساب العملاء المتأخرين (لديهم فواتير متأخرة)
+            const overdueCustomers = new Set();
+            invoices.forEach(inv => {
+                if (this.isInvoiceOverdue(inv)) {
+                    overdueCustomers.add(inv.customerId);
+                }
+            });
+
+            document.getElementById('totalCustomers').textContent = totalCustomers;
+            document.getElementById('activeCustomers').textContent = activeCustomers;
+            document.getElementById('activePercent').textContent = activePercent + '%';
+            document.getElementById('totalDebt').textContent = AccountingUtils.formatCurrency(totalDebt);
+            document.getElementById('overdueCustomers').textContent = overdueCustomers.size;
+
+            // تحديث إحصائيات العملاء
+            await this.updateCustomerStats(customers, invoices);
+
+        } catch (error) {
+            console.error('Error loading quick stats:', error);
+        }
+    },
+
+    async updateCustomerStats(customers, invoices) {
+        // تحديث إجمالي المشتريات والدين لكل عميل
+        for (let customer of customers) {
+            const customerInvoices = invoices.filter(inv => inv.customerId === customer.id);
+            const totalPurchases = customerInvoices.reduce((sum, inv) => sum + inv.total, 0);
+            const currentDebt = customerInvoices
+                .filter(inv => inv.status !== 'paid')
+                .reduce((sum, inv) => sum + (inv.balance || 0), 0);
+            
+            await AccountingDB.update('customers', customer.id, {
+                ...customer,
+                totalPurchases,
+                currentDebt,
+                updatedAt: new Date().toISOString()
+            });
+        }
+    },
+
+    async initChart() {
+        const ctx = document.getElementById('customersChart').getContext('2d');
+        
+        try {
+            const customers = await AccountingDB.getAll('customers');
+            const chartData = this.prepareChartData(customers);
+            
+            this.chart = new Chart(ctx, {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            rtl: true
+                        },
+                        tooltip: {
+                            rtl: true,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} عميل (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing chart:', error);
+        }
+    },
+
+    prepareChartData(customers) {
+        const types = {};
+        customers.forEach(customer => {
+            types[customer.type] = (types[customer.type] || 0) + 1;
+        });
+        
+        const backgroundColors = [
+            '#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6',
+            '#1abc9c', '#d35400', '#c0392b', '#7f8c8d'
+        ];
+        
+        return {
+            labels: Object.keys(types),
+            datasets: [{
+                data: Object.values(types),
+                backgroundColor: backgroundColors.slice(0, Object.keys(types).length),
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        };
+    },
+
+    // إدارة النماذج
+    showCustomerForm() {
+        this.currentCustomer = null;
+        document.getElementById('customerModalTitle').textContent = 'عميل جديد';
+        document.getElementById('customerForm').reset();
+        document.getElementById('customerId').value = '';
+        document.getElementById('customerCountry').value = 'المملكة العربية السعودية';
+        
+        this.showModal('customerModal');
+    },
+
+    async saveCustomer() {
+        const form = document.getElementById('customerForm');
+        if (!form.checkValidity()) {
+            this.showError('يرجى ملء جميع الحقول المطلوبة');
+            return;
+        }
+
+        const customerId = document.getElementById('customerId').value;
+        const creditLimit = document.getElementById('customerCreditLimit').value ? 
+            parseFloat(document.getElementById('customerCreditLimit').value) : 0;
+
+        const customerData = {
+            id: customerId || 'cust_' + Date.now(),
+            name: document.getElementById('customerName').value,
+            type: document.getElementById('customerType').value,
+            email: document.getElementById('customerEmail').value || null,
+            phone: document.getElementById('customerPhone').value,
+            taxNumber: document.getElementById('customerTaxNumber').value || null,
+            commercialNumber: document.getElementById('customerCommercialNumber').value || null,
+            address: document.getElementById('customerAddress').value || null,
+            city: document.getElementById('customerCity').value || null,
+            country: document.getElementById('customerCountry').value,
+            status: document.getElementById('customerStatus').value,
+            creditLimit: creditLimit,
+            notes: document.getElementById('customerNotes').value || null,
+            totalPurchases: this.currentCustomer?.totalPurchases || 0,
+            currentDebt: this.currentCustomer?.currentDebt || 0,
+            createdAt: customerId ? this.currentCustomer.createdAt : new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        try {
+            if (customerId) {
+                await AccountingDB.update('customers', customerId, customerData);
+            } else {
+                await AccountingDB.add('customers', customerData);
+            }
+
+            Auth.logActivity(Auth.getCurrentUser()?.id, 
+                customerId ? 'تحديث عميل' : 'إضافة عميل', 
+                `${customerId ? 'تم تحديث' : 'تم إضافة'} عميل ${customerData.name}`);
+
+            this.showSuccess(`تم ${customerId ? 'تحديث' : 'إضافة'} العميل بنجاح`);
+            this.closeCustomerForm();
+            await this.loadCustomers();
+            await this.loadQuickStats();
+            this.updateChart();
+            
+        } catch (error) {
+            console.error('Error saving customer:', error);
+            this.showError('فشل في حفظ العميل');
+        }
+    },
+
+    async editCustomer(id) {
+        try {
+            this.currentCustomer = await AccountingDB.get('customers', id);
+            
+            if (!this.currentCustomer) {
+                this.showError('العميل غير موجود');
+                return;
+            }
+
+            document.getElementById('customerModalTitle').textContent = 'تعديل العميل';
+            document.getElementById('customerId').value = this.currentCustomer.id;
+            document.getElementById('customerName').value = this.currentCustomer.name;
+            document.getElementById('customerType').value = this.currentCustomer.type;
+            document.getElementById('customerEmail').value = this.currentCustomer.email || '';
+            document.getElementById('customerPhone').value = this.currentCustomer.phone;
+            document.getElementById('customerTaxNumber').value = this.currentCustomer.taxNumber || '';
+            document.getElementById('customerCommercialNumber').value = this.currentCustomer.commercialNumber || '';
+            document.getElementById('customerAddress').value = this.currentCustomer.address || '';
+            document.getElementById('customerCity').value = this.currentCustomer.city || '';
+            document.getElementById('customerCountry').value = this.currentCustomer.country || 'المملكة العربية السعودية';
+            document.getElementById('customerStatus').value = this.currentCustomer.status;
+            document.getElementById('customerCreditLimit').value = this.currentCustomer.creditLimit || '';
+            document.getElementById('customerNotes').value = this.currentCustomer.notes || '';
+
+            this.showModal('customerModal');
+
+        } catch (error) {
+            console.error('Error loading customer:', error);
+            this.showError('فشل في تحميل العميل');
+        }
+    },
+
+    async viewCustomer(id) {
+        try {
+            const customer = await AccountingDB.get('customers', id);
+            const invoices = await AccountingDB.getAll('invoices');
+            const customerInvoices = invoices.filter(inv => inv.customerId === id);
+            
+            if (!customer) {
+                this.showError('العميل غير موجود');
+                return;
+            }
+
+            const totalInvoices = customerInvoices.length;
+            const paidInvoices = customerInvoices.filter(inv => inv.status === 'paid').length;
+            const overdueInvoices = customerInvoices.filter(inv => this.isInvoiceOverdue(inv)).length;
+            const totalAmount = customerInvoices.reduce((sum, inv) => sum + inv.total, 0);
+            const paidAmount = customerInvoices.reduce((sum, inv) => sum + (inv.paid || 0), 0);
+            const balanceAmount = totalAmount - paidAmount;
+
+            document.getElementById('customerDetailsTitle').textContent = `تفاصيل العميل: ${customer.name}`;
+            
+            document.getElementById('customerDetailsContent').innerHTML = `
+                <div class="customer-info" style="margin-bottom: 30px;">
+                    <div class="customer-avatar" style="width: 80px; height: 80px; font-size: 32px;">
+                        ${customer.name.charAt(0)}
+                    </div>
+                    <div style="flex: 1;">
+                        <h2 style="margin: 0 0 10px 0;">${customer.name}</h2>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <span class="customer-badge badge-${customer.type === 'شركة' ? 'company' : customer.type === 'حكومي' ? 'government' : 'individual'}">
+                                ${customer.type}
+                            </span>
+                            <span class="status ${customer.status === 'نشط' ? 'success' : customer.status === 'معلق' ? 'warning' : 'danger'}">
+                                ${customer.status}
+                            </span>
+                            ${customer.creditLimit > 0 ? `
+                                <span style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                    حد ائتمان: ${AccountingUtils.formatCurrency(customer.creditLimit)}
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customer-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">إجمالي الفواتير</div>
+                        <div class="stat-value">${totalInvoices}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">الفواتير المدفوعة</div>
+                        <div class="stat-value" style="color: #27ae60;">${paidInvoices}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">فواتير متأخرة</div>
+                        <div class="stat-value" style="color: #e74c3c;">${overdueInvoices}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">إجمالي المشتريات</div>
+                        <div class="stat-value">${AccountingUtils.formatCurrency(totalAmount)}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">المبلغ المدفوع</div>
+                        <div class="stat-value" style="color: #27ae60;">${AccountingUtils.formatCurrency(paidAmount)}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">الرصيد المستحق</div>
+                        <div class="stat-value" style="color: #e74c3c;">${AccountingUtils.formatCurrency(balanceAmount)}</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 15px;">المعلومات الأساسية</h4>
+                        <table class="info-table">
+                            <tr>
+                                <td><strong>البريد الإلكتروني:</strong></td>
+                                <td>${customer.email || 'غير محدد'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الهاتف:</strong></td>
+                                <td>${customer.phone}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الرقم الضريبي:</strong></td>
+                                <td>${customer.taxNumber || 'غير محدد'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>السجل التجاري:</strong></td>
+                                <td>${customer.commercialNumber || 'غير محدد'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div>
+                        <h4 style="margin-bottom: 15px;">العنوان</h4>
+                        <table class="info-table">
+                            <tr>
+                                <td><strong>العنوان:</strong></td>
+                                <td>${customer.address || 'غير محدد'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>المدينة:</strong></td>
+                                <td>${customer.city || 'غير محدد'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الدولة:</strong></td>
+                                <td>${customer.country || 'غير محدد'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>تاريخ التسجيل:</strong></td>
+                                <td>${AccountingUtils.formatDate(customer.createdAt)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                ${customer.notes ? `
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h4 style="margin-bottom: 10px;">ملاحظات</h4>
+                    <p style="margin: 0; line-height: 1.6;">${customer.notes}</p>
+                </div>
+                ` : ''}
+
+                <div class="form-actions" style="margin-top: 30px;">
+                    <button type="button" class="btn btn-primary" onclick="customersPage.editCustomer('${customer.id}')">
+                        <i class="fas fa-edit"></i> تعديل العميل
+                    </button>
+                    <button type="button" class="btn btn-info" onclick="customersPage.sendEmail('${customer.id}')">
+                        <i class="fas fa-envelope"></i> إرسال بريد
+                    </button>
+                    <button type="button" class="btn" onclick="customersPage.closeCustomerDetails()">
+                        إغلاق
+                    </button>
+                </div>
+            `;
+
+            this.showModal('customerDetailsModal');
+
+        } catch (error) {
+            console.error('Error loading customer details:', error);
+            this.showError('فشل في تحميل تفاصيل العميل');
+        }
+    },
+
+    async deleteCustomer(id) {
+        if (!confirm('هل أنت متأكد من حذف هذا العميل؟ سيتم أيضا حذف جميع الفواتير المرتبطة به.')) {
+            return;
+        }
+
+        try {
+            // حذف الفواتير المرتبطة أولاً
+            const invoices = await AccountingDB.getAll('invoices');
+            const customerInvoices = invoices.filter(inv => inv.customerId === id);
+            
+            for (const invoice of customerInvoices) {
+                await AccountingDB.delete('invoices', invoice.id);
+            }
+            
+            // ثم حذف العميل
+            await AccountingDB.delete('customers', id);
+            
+            Auth.logActivity(Auth.getCurrentUser()?.id, 'حذف عميل', 
+                            `تم حذف عميل ${id} و ${customerInvoices.length} فاتورة مرتبطة`);
+            
+            this.showSuccess('تم حذف العميل بنجاح');
+            await this.loadCustomers();
+            await this.loadQuickStats();
+            this.updateChart();
+            
+        } catch (error) {
+            console.error('Error deleting customer:', error);
+            this.showError('فشل في حذف العميل');
+        }
+    },
+
+    // خدمات البريد الإلكتروني
+    async sendEmail(customerId) {
+        const customer = await AccountingDB.get('customers', customerId);
+        if (!customer.email) {
+            this.showWarning('لا يوجد بريد إلكتروني مسجل للعميل');
+            return;
+        }
+
+        const subject = prompt('أدخل موضوع البريد الإلكتروني:', `مرحباً ${customer.name}`);
+        if (!subject) return;
+
+        const body = prompt('أدخل محتوى البريد الإلكتروني:', `عزيزي/عزيزتي ${customer.name},\n\n...`);
+        if (!body) return;
+
+        // محاكاة إرسال البريد (في تطبيق حقيقي، سيكون هذا اتصالاً بخدمة بريد إلكتروني)
+        this.showSuccess(`تم إرسال البريد الإلكتروني إلى ${customer.email}`);
+        
+        Auth.logActivity(Auth.getCurrentUser()?.id, 'إرسال بريد', 
+                        `تم إرسال بريد إلى ${customer.name}`);
+    },
+
+    async sendBulkEmail() {
+        if (this.selectedCustomers.size === 0) {
+            this.showWarning('يرجى اختيار عملاء لإرسال البريد');
+            return;
+        }
+
+        const subject = prompt('أدخل موضوع البريد الإلكتروني:', 'رسالة جماعية');
+        if (!subject) return;
+
+        const body = prompt('أدخل محتوى البريد الإلكتروني:', 'أعزائنا العملاء،\n\n...');
+        if (!body) return;
+
+        let sentCount = 0;
+        for (const customerId of this.selectedCustomers) {
+            const customer = await AccountingDB.get('customers', customerId);
+            if (customer.email) {
+                sentCount++;
+            }
+        }
+
+        this.showSuccess(`تم إرسال البريد إلى ${sentCount} عميل`);
+        this.selectedCustomers.clear();
+        document.getElementById('selectAll').checked = false;
+        
+        Auth.logActivity(Auth.getCurrentUser()?.id, 'إرسال بريد جماعي', 
+                        `تم إرسال بريد إلى ${sentCount} عميل`);
+    },
+
+    // خدمات مساعدة
+    isInvoiceOverdue(invoice) {
+        if (invoice.status === 'paid') return false;
+        const dueDate = new Date(invoice.dueDate);
+        const today = new Date();
+        return dueDate < today;
+    },
+
+    showModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    },
+
+    closeCustomerForm() {
+        document.getElementById('customerModal').style.display = 'none';
+    },
+
+    closeCustomerDetails() {
+        document.getElementById('customerDetailsModal').style.display = 'none';
+    },
+
+    closeAdvancedFilters() {
+        document.getElementById('advancedFilterModal').style.display = 'none';
+    },
+
+    showSuccess(message) {
+        window.accountingApp.showNotification(message, 'success');
+    },
+
+    showError(message) {
+        window.accountingApp.showNotification(message, 'error');
+    },
+
+    showWarning(message) {
+        window.accountingApp.showNotification(message, 'warning');
+    },
+
+    updatePagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / this.itemsPerPage);
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${i === this.currentPage ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => this.goToPage(i);
+            pagination.appendChild(pageBtn);
+        }
+    },
+
+    goToPage(page) {
+        this.currentPage = page;
+        this.loadCustomers();
+    },
+
+    updateTableInfo(totalItems) {
+        const start = (this.currentPage - 1) * this.itemsPerPage + 1;
+        const end = Math.min(start + this.itemsPerPage - 1, totalItems);
+        document.getElementById('tableInfo').textContent = 
+            `عرض ${start}-${end} من ${totalItems} عنصر`;
+    },
+
+    setupEventListeners() {
+        setInterval(() => {
+            this.loadCustomers();
+            this.loadQuickStats();
+        }, 30000);
+    }
+};
+</script>

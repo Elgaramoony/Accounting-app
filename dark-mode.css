@@ -1,0 +1,378 @@
+/* الوضع الليلي - تصميم نور الجرموني */
+:root {
+    /* ألوان الوضع النهاري */
+    --primary-light: #3498db;
+    --secondary-light: #2c3e50;
+    --success-light: #27ae60;
+    --warning-light: #f39c12;
+    --danger-light: #e74c3c;
+    --background-light: #f8f9fa;
+    --surface-light: #ffffff;
+    --text-light: #2c3e50;
+    --text-secondary-light: #7f8c8d;
+    --border-light: #e1e5e9;
+
+    /* ألوان الوضع الليلي */
+    --primary-dark: #bb86fc;
+    --secondary-dark: #03dac6;
+    --success-dark: #00c853;
+    --warning-dark: #ffab00;
+    --danger-dark: #cf6679;
+    --background-dark: #121212;
+    --surface-dark: #1e1e1e;
+    --surface-dark-2: #2d2d2d;
+    --text-dark: #e0e0e0;
+    --text-secondary-dark: #a0a0a0;
+    --border-dark: #333333;
+}
+
+/* الوضع الليلي */
+body.dark-mode {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+}
+
+.dark-mode .login-container {
+    background: var(--surface-dark);
+}
+
+.dark-mode .login-box {
+    background: var(--surface-dark-2);
+    color: var(--text-dark);
+}
+
+.dark-mode .login-header h1 {
+    color: var(--text-dark);
+}
+
+.dark-mode .login-header p {
+    color: var(--text-secondary-dark);
+}
+
+.dark-mode .form-group label {
+    color: var(--text-dark);
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group select,
+.dark-mode .form-group textarea {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .form-group input:focus,
+.dark-mode .form-group select:focus,
+.dark-mode .form-group textarea:focus {
+    border-color: var(--primary-dark);
+    background: var(--surface-dark-2);
+}
+
+.dark-mode .sidebar {
+    background: var(--surface-dark);
+}
+
+.dark-mode .sidebar-header {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .sidebar-menu a {
+    color: var(--text-dark);
+}
+
+.dark-mode .sidebar-menu a:hover,
+.dark-mode .sidebar-menu a.active {
+    background: var(--primary-dark);
+    color: var(--background-dark);
+}
+
+.dark-mode .main-content {
+    background: var(--background-dark);
+}
+
+.dark-mode .header {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .header h1 {
+    color: var(--text-dark);
+}
+
+.dark-mode .card {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+    border-left-color: var(--primary-dark);
+}
+
+.dark-mode .card.revenue { border-left-color: var(--success-dark); }
+.dark-mode .card.expenses { border-left-color: var(--danger-dark); }
+.dark-mode .card.profit { border-left-color: var(--primary-dark); }
+.dark-mode .card.customers { border-left-color: var(--warning-dark); }
+
+.dark-mode .card h3 {
+    color: var(--text-secondary-dark);
+}
+
+.dark-mode .card .amount {
+    color: var(--text-dark);
+}
+
+.dark-mode .table-container {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .table-header {
+    background: var(--surface-dark-2);
+}
+
+.dark-mode .table-header h3 {
+    color: var(--text-dark);
+}
+
+.dark-mode table {
+    color: var(--text-dark);
+}
+
+.dark-mode th {
+    background: var(--surface-dark-2);
+    color: var(--text-dark);
+}
+
+.dark-mode td {
+    border-bottom-color: var(--border-dark);
+}
+
+.dark-mode tr:hover {
+    background: var(--surface-dark-2);
+}
+
+.dark-mode .form-container {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .modal-content {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .modal-header {
+    border-bottom-color: var(--border-dark);
+}
+
+.dark-mode .chart-container {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .status {
+    color: var(--text-dark);
+}
+
+.dark-mode .status.paid {
+    background: #1b5e20;
+    color: #a5d6a7;
+}
+
+.dark-mode .status.unpaid {
+    background: #b71c1c;
+    color: #ef9a9a;
+}
+
+.dark-mode .status.partial {
+    background: #f57f17;
+    color: #fff9c4;
+}
+
+.dark-mode .btn {
+    transition: all 0.3s ease;
+}
+
+.dark-mode .btn-primary {
+    background: var(--primary-dark);
+    color: var(--background-dark);
+}
+
+.dark-mode .btn-success {
+    background: var(--success-dark);
+    color: var(--background-dark);
+}
+
+.dark-mode .btn-warning {
+    background: var(--warning-dark);
+    color: var(--background-dark);
+}
+
+.dark-mode .btn-danger {
+    background: var(--danger-dark);
+    color: var(--background-dark);
+}
+
+.dark-mode .search-box input {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .filter-bar select,
+.dark-mode .filter-bar input {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .loading-spinner {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .theme-switcher .theme-btn {
+    background: var(--primary-dark);
+    color: var(--background-dark);
+}
+
+/* تأثيرات انتقالية سلسة */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* زر تبديل الوضع */
+.theme-switcher {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10000;
+}
+
+.theme-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: var(--primary-light);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.theme-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .theme-btn {
+    background: var(--primary-dark);
+    color: var(--background-dark);
+}
+
+/* شريط التحميل المخصص */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    flex-direction: column;
+}
+
+.dark-mode .loading-overlay {
+    background: linear-gradient(135deg, var(--primary-dark), var(--background-dark));
+}
+
+.loading-spinner {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .loading-spinner {
+    background: rgba(30, 30, 30, 0.95);
+    color: var(--text-dark);
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--primary-light);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.dark-mode .spinner {
+    border: 5px solid var(--surface-dark);
+    border-top: 5px solid var(--primary-dark);
+}
+
+.developer-credit {
+    margin-top: 20px;
+    padding: 10px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 10px;
+    font-style: italic;
+}
+
+.dark-mode .developer-credit {
+    background: rgba(187, 134, 252, 0.1);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* تأثيرات بصرية إضافية */
+.glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .glass-effect {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* تخصيص شريط التمرير */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-light);
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: var(--background-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+    border-radius: 4px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--primary-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-light);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-dark);
+}

@@ -1,0 +1,1025 @@
+<div class="header">
+    <div>
+        <h1>إدارة المصروفات</h1>
+        <div class="breadcrumb">
+            <span>الرئيسية</span>
+            <i class="fas fa-chevron-left"></i>
+            <span>المصروفات</span>
+        </div>
+    </div>
+    <div class="user-info">
+        <button class="btn btn-primary" onclick="expensesPage.showExpenseForm()">
+            <i class="fas fa-plus"></i> مصروف جديد
+        </button>
+        <button class="btn btn-success" onclick="expensesPage.exportExpenses()">
+            <i class="fas fa-download"></i> تصدير
+        </button>
+    </div>
+</div>
+
+<!-- شريط التصفية والبحث -->
+<div class="filter-bar">
+    <div class="search-box">
+        <input type="text" id="expenseSearch" placeholder="بحث في المصروفات..." 
+               onkeyup="filterTable('expensesTable', this.value)">
+        <i class="fas fa-search"></i>
+    </div>
+    
+    <select id="categoryFilter" class="form-control" onchange="expensesPage.filterExpenses()">
+        <option value="">جميع الفئات</option>
+        <option value="مكتب">مكتب</option>
+        <option value="رواتب">رواتب</option>
+        <option value="تسويق">تسويق</option>
+        <option value="نقل">نقل</option>
+        <option value="صيانة">صيانة</option>
+        <option value="أخرى">أخرى</option>
+    </select>
+    
+    <select id="paymentMethodFilter" class="form-control" onchange="expensesPage.filterExpenses()">
+        <option value="">جميع طرق الدفع</option>
+        <option value="نقدي">نقدي</option>
+        <option value="بطاقة">بطاقة</option>
+        <option value="تحويل">تحويل بنكي</option>
+        <option value="شيك">شيك</option>
+    </select>
+    
+    <input type="month" id="dateFilter" class="form-control" onchange="expensesPage.filterExpenses()">
+    
+    <button class="btn btn-info" onclick="expensesPage.showAdvancedFilters()">
+        <i class="fas fa-filter"></i> تصفية متقدم
+    </button>
+</div>
+
+<!-- إحصائيات سريعة -->
+<div class="cards">
+    <div class="card">
+        <h3>إجمالي المصروفات</h3>
+        <div class="amount" id="totalExpenses">0 ر.س</div>
+        <div class="trend up" id="totalTrend">+0%</div>
+    </div>
+    <div class="card revenue">
+        <h3>هذا الشهر</h3>
+        <div class="amount" id="monthlyExpenses">0 ر.س</div>
+        <div class="trend down" id="monthlyTrend">-0%</div>
+    </div>
+    <div class="card success">
+        <h3>أعلى فئة</h3>
+        <div class="amount" id="topCategory">-</div>
+        <div class="category-percent" id="topCategoryPercent">0%</div>
+    </div>
+    <div class="card warning">
+        <h3>المصروفات المتكررة</h3>
+        <div class="amount" id="recurringExpenses">0</div>
+        <div class="sub-text">شهرية</div>
+    </div>
+</div>
+
+<!-- مخطط المصروفات -->
+<div class="chart-container">
+    <div class="chart-header">
+        <h3>توزيع المصروفات</h3>
+        <select id="chartPeriod" class="form-control" onchange="expensesPage.updateChart()" style="width: 150px;">
+            <option value="month">هذا الشهر</option>
+            <option value="quarter">هذا الربع</option>
+            <option value="year">هذه السنة</option>
+        </select>
+    </div>
+    <div class="chart-wrapper">
+        <canvas id="expensesChart"></canvas>
+    </div>
+</div>
+
+<!-- جدول المصروفات -->
+<div class="table-container">
+    <div class="table-header">
+        <h3>سجل المصروفات</h3>
+        <div class="table-actions">
+            <button class="btn btn-sm" onclick="expensesPage.printExpenses()">
+                <i class="fas fa-print"></i> طباعة
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="expensesPage.bulkDelete()">
+                <i class="fas fa-trash"></i> حذف متعدد
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table id="expensesTable">
+            <thead>
+                <tr>
+                    <th width="50">
+                        <input type="checkbox" id="selectAll" onchange="expensesPage.toggleSelectAll()">
+                    </th>
+                    <th>الوصف</th>
+                    <th>الفئة</th>
+                    <th>المبلغ</th>
+                    <th>طريقة الدفع</th>
+                    <th>التاريخ</th>
+                    <th>المشروع</th>
+                    <th>الحالة</th>
+                    <th width="120">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- سيتم ملء الجدول بالبيانات -->
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="table-footer">
+        <div class="table-info" id="tableInfo">
+            عرض 0 من 0 عنصر
+        </div>
+        <div class="pagination" id="pagination">
+            <!-- سيتم إضافة أرقام الصفحات هنا -->
+        </div>
+    </div>
+</div>
+
+<!-- نموذج المصروف -->
+<div id="expenseModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 id="expenseModalTitle">مصروف جديد</h3>
+            <button class="close" onclick="expensesPage.closeExpenseForm()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="expenseForm">
+                <input type="hidden" id="expenseId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expenseDescription">الوصف *</label>
+                        <input type="text" id="expenseDescription" required placeholder="وصف المصروف">
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseCategory">الفئة *</label>
+                        <select id="expenseCategory" required>
+                            <option value="">اختر الفئة</option>
+                            <option value="مكتب">مكتب</option>
+                            <option value="رواتب">رواتب</option>
+                            <option value="تسويق">تسويق</option>
+                            <option value="نقل">نقل</option>
+                            <option value="صيانة">صيانة</option>
+                            <option value="مرافق">مرافق</option>
+                            <option value="برمجيات">برمجيات</option>
+                            <option value="تدريب">تدريب</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expenseAmount">المبلغ *</label>
+                        <input type="number" id="expenseAmount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseDate">التاريخ *</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expensePaymentMethod">طريقة الدفع *</label>
+                        <select id="expensePaymentMethod" required>
+                            <option value="نقدي">نقدي</option>
+                            <option value="بطاقة">بطاقة ائتمان</option>
+                            <option value="تحويل">تحويل بنكي</option>
+                            <option value="شيك">شيك</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseProject">المشروع (اختياري)</label>
+                        <select id="expenseProject">
+                            <option value="">بدون مشروع</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expenseReceipt">إيصال (اختياري)</label>
+                        <input type="file" id="expenseReceipt" accept="image/*,.pdf">
+                        <div class="file-info" id="fileInfo"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseStatus">الحالة</label>
+                        <select id="expenseStatus">
+                            <option value="معلقة">معلقة</option>
+                            <option value="مكتملة">مكتملة</option>
+                            <option value="ملغاة">ملغاة</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="expenseNotes">ملاحظات</label>
+                    <textarea id="expenseNotes" rows="3" placeholder="ملاحظات إضافية حول المصروف..."></textarea>
+                </div>
+
+                <div class="form-group" id="recurringSection">
+                    <label>
+                        <input type="checkbox" id="isRecurring" onchange="expensesPage.toggleRecurring()">
+                        مصروف متكرر
+                    </label>
+                    
+                    <div id="recurringOptions" style="display: none; margin-top: 10px;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recurringFrequency">التكرار</label>
+                                <select id="recurringFrequency">
+                                    <option value="أسبوعي">أسبوعي</option>
+                                    <option value="شهري">شهري</option>
+                                    <option value="ربع سنوي">ربع سنوي</option>
+                                    <option value="سنوي">سنوي</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recurringEndDate">تاريخ الانتهاء</label>
+                                <input type="date" id="recurringEndDate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="expensesPage.saveExpense()">
+                        <i class="fas fa-save"></i> حفظ المصروف
+                    </button>
+                    <button type="button" class="btn" onclick="expensesPage.closeExpenseForm()">
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- تصفية متقدم -->
+<div id="advancedFilterModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3>تصفية متقدم للمصروفات</h3>
+            <button class="close" onclick="expensesPage.closeAdvancedFilters()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="filterAmountFrom">المبلغ من</label>
+                    <input type="number" id="filterAmountFrom" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="filterAmountTo">المبلغ إلى</label>
+                    <input type="number" id="filterAmountTo" step="0.01" min="0">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="filterDateFrom">التاريخ من</label>
+                    <input type="date" id="filterDateFrom">
+                </div>
+                <div class="form-group">
+                    <label for="filterDateTo">التاريخ إلى</label>
+                    <input type="date" id="filterDateTo">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="filterVendor">المورد</label>
+                <input type="text" id="filterVendor" placeholder="اسم المورد...">
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="filterRecurring">
+                    عرض المصروفات المتكررة فقط
+                </label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="expensesPage.applyAdvancedFilters()">
+                    تطبيق التصفية
+                </button>
+                <button type="button" class="btn" onclick="expensesPage.resetAdvancedFilters()">
+                    إعادة تعيين
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chart-container {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+}
+
+.trend {
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.trend.up {
+    color: var(--success-color);
+}
+
+.trend.down {
+    color: var(--danger-color);
+}
+
+.category-percent {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.sub-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.file-info {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+.expense-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-recurring {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.badge-urgent {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+/* الوضع الليلي */
+.dark-mode .chart-container {
+    background: var(--surface-dark);
+}
+
+.dark-mode .badge-recurring {
+    background: rgba(33, 150, 243, 0.2);
+    color: #64b5f6;
+}
+
+.dark-mode .badge-urgent {
+    background: rgba(244, 67, 54, 0.2);
+    color: #ef5350;
+}
+</style>
+
+<script>
+// إدارة المصروفات
+const expensesPage = {
+    currentExpense: null,
+    selectedExpenses: new Set(),
+    currentPage: 1,
+    itemsPerPage: 10,
+    filters: {},
+    chart: null,
+
+    async init() {
+        await this.loadExpenses();
+        await this.loadProjects();
+        await this.loadQuickStats();
+        await this.initChart();
+        this.setupEventListeners();
+    },
+
+    async loadExpenses() {
+        try {
+            const expenses = await AccountingDB.getAll('expenses');
+            this.displayExpenses(expenses);
+            this.updatePagination(expenses.length);
+        } catch (error) {
+            console.error('Error loading expenses:', error);
+            this.showError('فشل في تحميل المصروفات');
+        }
+    },
+
+    displayExpenses(expenses) {
+        const tbody = document.querySelector('#expensesTable tbody');
+        tbody.innerHTML = '';
+
+        // تطبيق الفلاتر
+        let filteredExpenses = this.applyFilters(expenses);
+        
+        // التصفية حسب الصفحة
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const pagedExpenses = filteredExpenses.slice(startIndex, endIndex);
+
+        if (pagedExpenses.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 40px; color: #7f8c8d;">
+                        <i class="fas fa-receipt" style="font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5;"></i>
+                        لا توجد مصروفات
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        pagedExpenses.forEach(expense => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <input type="checkbox" value="${expense.id}" 
+                           onchange="expensesPage.toggleExpenseSelection('${expense.id}')"
+                           ${this.selectedExpenses.has(expense.id) ? 'checked' : ''}>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        ${expense.receipt ? '<i class="fas fa-paperclip" style="color: #3498db;"></i>' : ''}
+                        <span>${expense.description}</span>
+                    </div>
+                    ${expense.isRecurring ? '<span class="expense-badge badge-recurring">متكرر</span>' : ''}
+                </td>
+                <td>
+                    <span class="category-tag" style="background: ${this.getCategoryColor(expense.category)}">
+                        ${expense.category}
+                    </span>
+                </td>
+                <td style="font-weight: bold; color: #e74c3c;">
+                    ${AccountingUtils.formatCurrency(expense.amount)}
+                </td>
+                <td>${expense.paymentMethod}</td>
+                <td>${AccountingUtils.formatDate(expense.date)}</td>
+                <td>${expense.projectName || '-'}</td>
+                <td>
+                    <span class="status ${expense.status === 'مكتملة' ? 'success' : expense.status === 'ملغاة' ? 'danger' : 'warning'}">
+                        ${expense.status}
+                    </span>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-sm" onclick="expensesPage.viewExpense('${expense.id}')" title="عرض">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm" onclick="expensesPage.editExpense('${expense.id}')" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        ${expense.receipt ? `
+                        <button class="btn btn-info btn-sm" onclick="expensesPage.viewReceipt('${expense.id}')" title="عرض الإيصال">
+                            <i class="fas fa-receipt"></i>
+                        </button>
+                        ` : ''}
+                        <button class="btn btn-danger btn-sm" onclick="expensesPage.deleteExpense('${expense.id}')" title="حذف">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // تحديث معلومات الجدول
+        this.updateTableInfo(filteredExpenses.length);
+    },
+
+    applyFilters(expenses) {
+        let filtered = [...expenses];
+
+        // فلترة حسب الفئة
+        if (this.filters.category) {
+            filtered = filtered.filter(exp => exp.category === this.filters.category);
+        }
+
+        // فلترة حسب طريقة الدفع
+        if (this.filters.paymentMethod) {
+            filtered = filtered.filter(exp => exp.paymentMethod === this.filters.paymentMethod);
+        }
+
+        // فلترة حسب التاريخ
+        if (this.filters.month) {
+            filtered = filtered.filter(exp => {
+                const expDate = new Date(exp.date);
+                const filterDate = new Date(this.filters.month);
+                return expDate.getMonth() === filterDate.getMonth() && 
+                       expDate.getFullYear() === filterDate.getFullYear();
+            });
+        }
+
+        // فلترة حسب المبلغ
+        if (this.filters.amountFrom) {
+            filtered = filtered.filter(exp => exp.amount >= parseFloat(this.filters.amountFrom));
+        }
+        if (this.filters.amountTo) {
+            filtered = filtered.filter(exp => exp.amount <= parseFloat(this.filters.amountTo));
+        }
+
+        // فلترة حسب نطاق التاريخ
+        if (this.filters.dateFrom) {
+            filtered = filtered.filter(exp => new Date(exp.date) >= new Date(this.filters.dateFrom));
+        }
+        if (this.filters.dateTo) {
+            filtered = filtered.filter(exp => new Date(exp.date) <= new Date(this.filters.dateTo));
+        }
+
+        // فلترة حسب المورد
+        if (this.filters.vendor) {
+            filtered = filtered.filter(exp => 
+                exp.vendor?.toLowerCase().includes(this.filters.vendor.toLowerCase()));
+        }
+
+        // فلترة المصروفات المتكررة
+        if (this.filters.recurring) {
+            filtered = filtered.filter(exp => exp.isRecurring);
+        }
+
+        // ترتيب من الأحدث إلى الأقدم
+        return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    },
+
+    async loadProjects() {
+        try {
+            const projects = await AccountingDB.getAll('projects');
+            const projectSelect = document.getElementById('expenseProject');
+            
+            projectSelect.innerHTML = '<option value="">بدون مشروع</option>';
+            
+            projects.forEach(project => {
+                const option = document.createElement('option');
+                option.value = project.id;
+                option.textContent = project.name;
+                projectSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading projects:', error);
+        }
+    },
+
+    async loadQuickStats() {
+        try {
+            const expenses = await AccountingDB.getAll('expenses');
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            // إجمالي المصروفات
+            const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            
+            // مصروفات هذا الشهر
+            const monthlyExpenses = expenses
+                .filter(exp => {
+                    const expDate = new Date(exp.date);
+                    return expDate.getMonth() === currentMonth && 
+                           expDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, exp) => sum + exp.amount, 0);
+            
+            // أعلى فئة
+            const categoryTotals = {};
+            expenses.forEach(exp => {
+                categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+            });
+            
+            let topCategory = '-';
+            let topCategoryAmount = 0;
+            Object.entries(categoryTotals).forEach(([category, amount]) => {
+                if (amount > topCategoryAmount) {
+                    topCategory = category;
+                    topCategoryAmount = amount;
+                }
+            });
+            
+            const topCategoryPercent = totalExpenses > 0 ? 
+                Math.round((topCategoryAmount / totalExpenses) * 100) : 0;
+            
+            // المصروفات المتكررة
+            const recurringExpenses = expenses.filter(exp => exp.isRecurring).length;
+
+            document.getElementById('totalExpenses').textContent = AccountingUtils.formatCurrency(totalExpenses);
+            document.getElementById('monthlyExpenses').textContent = AccountingUtils.formatCurrency(monthlyExpenses);
+            document.getElementById('topCategory').textContent = topCategory;
+            document.getElementById('topCategoryPercent').textContent = topCategoryPercent + '%';
+            document.getElementById('recurringExpenses').textContent = recurringExpenses;
+
+            // حساب الاتجاهات (مبسط)
+            const lastMonthExpenses = expenses
+                .filter(exp => {
+                    const expDate = new Date(exp.date);
+                    return expDate.getMonth() === currentMonth - 1 && 
+                           expDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, exp) => sum + exp.amount, 0);
+            
+            const monthlyTrend = lastMonthExpenses > 0 ? 
+                ((monthlyExpenses - lastMonthExpenses) / lastMonthExpenses * 100).toFixed(1) : 0;
+            
+            document.getElementById('monthlyTrend').textContent = 
+                (monthlyTrend > 0 ? '+' : '') + monthlyTrend + '%';
+            document.getElementById('monthlyTrend').className = 
+                `trend ${monthlyTrend > 0 ? 'up' : 'down'}`;
+
+        } catch (error) {
+            console.error('Error loading quick stats:', error);
+        }
+    },
+
+    async initChart() {
+        const ctx = document.getElementById('expensesChart').getContext('2d');
+        
+        try {
+            const expenses = await AccountingDB.getAll('expenses');
+            const chartData = this.prepareChartData(expenses, 'month');
+            
+            this.chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            rtl: true
+                        },
+                        tooltip: {
+                            rtl: true,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${AccountingUtils.formatCurrency(value)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing chart:', error);
+        }
+    },
+
+    prepareChartData(expenses, period) {
+        const now = new Date();
+        let filteredExpenses = [...expenses];
+        
+        // تصفية حسب الفترة
+        if (period === 'month') {
+            filteredExpenses = expenses.filter(exp => {
+                const expDate = new Date(exp.date);
+                return expDate.getMonth() === now.getMonth() && 
+                       expDate.getFullYear() === now.getFullYear();
+            });
+        } else if (period === 'quarter') {
+            const quarterStart = Math.floor(now.getMonth() / 3) * 3;
+            filteredExpenses = expenses.filter(exp => {
+                const expDate = new Date(exp.date);
+                return expDate.getMonth() >= quarterStart && 
+                       expDate.getMonth() < quarterStart + 3 &&
+                       expDate.getFullYear() === now.getFullYear();
+            });
+        } else if (period === 'year') {
+            filteredExpenses = expenses.filter(exp => {
+                const expDate = new Date(exp.date);
+                return expDate.getFullYear() === now.getFullYear();
+            });
+        }
+        
+        // تجميع حسب الفئة
+        const categories = {};
+        filteredExpenses.forEach(exp => {
+            categories[exp.category] = (categories[exp.category] || 0) + exp.amount;
+        });
+        
+        const backgroundColors = [
+            '#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6',
+            '#1abc9c', '#d35400', '#c0392b', '#16a085', '#8e44ad'
+        ];
+        
+        return {
+            labels: Object.keys(categories),
+            datasets: [{
+                data: Object.values(categories),
+                backgroundColor: backgroundColors.slice(0, Object.keys(categories).length),
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        };
+    },
+
+    updateChart() {
+        const period = document.getElementById('chartPeriod').value;
+        
+        AccountingDB.getAll('expenses').then(expenses => {
+            const chartData = this.prepareChartData(expenses, period);
+            this.chart.data = chartData;
+            this.chart.update();
+        });
+    },
+
+    // إدارة النماذج
+    showExpenseForm() {
+        this.currentExpense = null;
+        document.getElementById('expenseModalTitle').textContent = 'مصروف جديد';
+        document.getElementById('expenseForm').reset();
+        document.getElementById('expenseId').value = '';
+        document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('isRecurring').checked = false;
+        document.getElementById('recurringOptions').style.display = 'none';
+        
+        this.showModal('expenseModal');
+    },
+
+    toggleRecurring() {
+        const isRecurring = document.getElementById('isRecurring').checked;
+        document.getElementById('recurringOptions').style.display = isRecurring ? 'block' : 'none';
+    },
+
+    async saveExpense() {
+        const form = document.getElementById('expenseForm');
+        if (!form.checkValidity()) {
+            this.showError('يرجى ملء جميع الحقول المطلوبة');
+            return;
+        }
+
+        const expenseId = document.getElementById('expenseId').value;
+        const amount = parseFloat(document.getElementById('expenseAmount').value);
+        const isRecurring = document.getElementById('isRecurring').checked;
+
+        // معالجة ملف الإيصال (مبسطة)
+        const receiptFile = document.getElementById('expenseReceipt').files[0];
+        let receiptData = null;
+        
+        if (receiptFile) {
+            receiptData = await this.readFileAsDataURL(receiptFile);
+        }
+
+        const expenseData = {
+            id: expenseId || 'exp_' + Date.now(),
+            description: document.getElementById('expenseDescription').value,
+            category: document.getElementById('expenseCategory').value,
+            amount: amount,
+            date: document.getElementById('expenseDate').value,
+            paymentMethod: document.getElementById('expensePaymentMethod').value,
+            projectId: document.getElementById('expenseProject').value || null,
+            projectName: document.getElementById('expenseProject').options[document.getElementById('expenseProject').selectedIndex]?.text || null,
+            status: document.getElementById('expenseStatus').value,
+            notes: document.getElementById('expenseNotes').value,
+            receipt: receiptData,
+            isRecurring: isRecurring,
+            recurringFrequency: isRecurring ? document.getElementById('recurringFrequency').value : null,
+            recurringEndDate: isRecurring ? document.getElementById('recurringEndDate').value : null,
+            createdAt: expenseId ? this.currentExpense.createdAt : new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        try {
+            if (expenseId) {
+                await AccountingDB.update('expenses', expenseId, expenseData);
+            } else {
+                await AccountingDB.add('expenses', expenseData);
+            }
+
+            // تسجيل النشاط
+            Auth.logActivity(Auth.getCurrentUser()?.id, 
+                expenseId ? 'تحديث مصروف' : 'إضافة مصروف', 
+                `${expenseId ? 'تم تحديث' : 'تم إضافة'} مصروف ${expenseData.description}`);
+
+            this.showSuccess(`تم ${expenseId ? 'تحديث' : 'إضافة'} المصروف بنجاح`);
+            this.closeExpenseForm();
+            await this.loadExpenses();
+            await this.loadQuickStats();
+            this.updateChart();
+            
+        } catch (error) {
+            console.error('Error saving expense:', error);
+            this.showError('فشل في حفظ المصروف');
+        }
+    },
+
+    readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    },
+
+    async editExpense(id) {
+        try {
+            this.currentExpense = await AccountingDB.get('expenses', id);
+            
+            if (!this.currentExpense) {
+                this.showError('المصروف غير موجود');
+                return;
+            }
+
+            document.getElementById('expenseModalTitle').textContent = 'تعديل المصروف';
+            document.getElementById('expenseId').value = this.currentExpense.id;
+            document.getElementById('expenseDescription').value = this.currentExpense.description;
+            document.getElementById('expenseCategory').value = this.currentExpense.category;
+            document.getElementById('expenseAmount').value = this.currentExpense.amount;
+            document.getElementById('expenseDate').value = this.currentExpense.date.split('T')[0];
+            document.getElementById('expensePaymentMethod').value = this.currentExpense.paymentMethod;
+            document.getElementById('expenseProject').value = this.currentExpense.projectId || '';
+            document.getElementById('expenseStatus').value = this.currentExpense.status;
+            document.getElementById('expenseNotes').value = this.currentExpense.notes || '';
+            
+            // إعداد الخيارات المتكررة
+            document.getElementById('isRecurring').checked = this.currentExpense.isRecurring || false;
+            if (this.currentExpense.isRecurring) {
+                document.getElementById('recurringFrequency').value = this.currentExpense.recurringFrequency;
+                document.getElementById('recurringEndDate').value = this.currentExpense.recurringEndDate || '';
+                document.getElementById('recurringOptions').style.display = 'block';
+            }
+
+            this.showModal('expenseModal');
+
+        } catch (error) {
+            console.error('Error loading expense:', error);
+            this.showError('فشل في تحميل المصروف');
+        }
+    },
+
+    async deleteExpense(id) {
+        if (!confirm('هل أنت متأكد من حذف هذا المصروف؟')) {
+            return;
+        }
+
+        try {
+            await AccountingDB.delete('expenses', id);
+            
+            Auth.logActivity(Auth.getCurrentUser()?.id, 'حذف مصروف', 
+                            `تم حذف مصروف ${id}`);
+            
+            this.showSuccess('تم حذف المصروف بنجاح');
+            await this.loadExpenses();
+            await this.loadQuickStats();
+            this.updateChart();
+            
+        } catch (error) {
+            console.error('Error deleting expense:', error);
+            this.showError('فشل في حذف المصروف');
+        }
+    },
+
+    viewReceipt(id) {
+        // عرض الإيصال في نافذة جديدة
+        AccountingDB.get('expenses', id).then(expense => {
+            if (expense.receipt) {
+                const receiptWindow = window.open('', '_blank');
+                receiptWindow.document.write(`
+                    <html>
+                        <head><title>إيصال المصروف</title></head>
+                        <body style="margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+                            <img src="${expense.receipt}" style="max-width: 100%; max-height: 100vh;" alt="إيصال المصروف">
+                        </body>
+                    </html>
+                `);
+                receiptWindow.document.close();
+            } else {
+                this.showWarning('لا يوجد إيصال مرفق');
+            }
+        });
+    },
+
+    // التصفية والبحث
+    filterExpenses() {
+        this.filters = {
+            category: document.getElementById('categoryFilter').value,
+            paymentMethod: document.getElementById('paymentMethodFilter').value,
+            month: document.getElementById('dateFilter').value
+        };
+        
+        this.currentPage = 1;
+        this.loadExpenses();
+    },
+
+    showAdvancedFilters() {
+        this.showModal('advancedFilterModal');
+    },
+
+    applyAdvancedFilters() {
+        this.filters.amountFrom = document.getElementById('filterAmountFrom').value;
+        this.filters.amountTo = document.getElementById('filterAmountTo').value;
+        this.filters.dateFrom = document.getElementById('filterDateFrom').value;
+        this.filters.dateTo = document.getElementById('filterDateTo').value;
+        this.filters.vendor = document.getElementById('filterVendor').value;
+        this.filters.recurring = document.getElementById('filterRecurring').checked;
+        
+        this.currentPage = 1;
+        this.loadExpenses();
+        this.closeAdvancedFilters();
+    },
+
+    resetAdvancedFilters() {
+        document.getElementById('filterAmountFrom').value = '';
+        document.getElementById('filterAmountTo').value = '';
+        document.getElementById('filterDateFrom').value = '';
+        document.getElementById('filterDateTo').value = '';
+        document.getElementById('filterVendor').value = '';
+        document.getElementById('filterRecurring').checked = false;
+    },
+
+    // خدمات مساعدة
+    getCategoryColor(category) {
+        const colors = {
+            'مكتب': '#3498db',
+            'رواتب': '#2ecc71',
+            'تسويق': '#e74c3c',
+            'نقل': '#f39c12',
+            'صيانة': '#9b59b6',
+            'مرافق': '#1abc9c',
+            'برمجيات': '#d35400',
+            'تدريب': '#c0392b',
+            'أخرى': '#7f8c8d'
+        };
+        return colors[category] || '#7f8c8d';
+    },
+
+    showModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    },
+
+    closeExpenseForm() {
+        document.getElementById('expenseModal').style.display = 'none';
+    },
+
+    closeAdvancedFilters() {
+        document.getElementById('advancedFilterModal').style.display = 'none';
+    },
+
+    showSuccess(message) {
+        window.accountingApp.showNotification(message, 'success');
+    },
+
+    showError(message) {
+        window.accountingApp.showNotification(message, 'error');
+    },
+
+    showWarning(message) {
+        window.accountingApp.showNotification(message, 'warning');
+    },
+
+    updatePagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / this.itemsPerPage);
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${i === this.currentPage ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => this.goToPage(i);
+            pagination.appendChild(pageBtn);
+        }
+    },
+
+    goToPage(page) {
+        this.currentPage = page;
+        this.loadExpenses();
+    },
+
+    updateTableInfo(totalItems) {
+        const start = (this.currentPage - 1) * this.itemsPerPage + 1;
+        const end = Math.min(start + this.itemsPerPage - 1, totalItems);
+        document.getElementById('tableInfo').textContent = 
+            `عرض ${start}-${end} من ${totalItems} عنصر`;
+    },
+
+    setupEventListeners() {
+        // تحديث تلقائي للبيانات كل 30 ثانية
+        setInterval(() => {
+            this.loadExpenses();
+            this.loadQuickStats();
+        }, 30000);
+    }
+};
+</script>

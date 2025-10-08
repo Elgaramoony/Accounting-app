@@ -1,0 +1,50 @@
+<div class="header">
+    <div>
+        <h1>إدارة الرواتب</h1>
+        <div class="breadcrumb">
+            <span>الرئيسية</span>
+            <i class="fas fa-chevron-left"></i>
+            <span>الرواتب</span>
+        </div>
+    </div>
+    <div class="user-info">
+        <button class="btn btn-primary" onclick="payrollPage.runPayroll()">
+            <i class="fas fa-calculator"></i> حساب الرواتب
+        </button>
+        <button class="btn btn-success" onclick="payrollPage.exportPayslips()">
+            <i class="fas fa-download"></i> تصدير كشوف
+        </button>
+    </div>
+</div>
+
+<!-- فترة الرواتب -->
+<div class="payroll-period">
+    <div class="period-selector">
+        <select id="payrollMonth" onchange="payrollPage.loadPayroll()">
+            <!-- شهور -->
+        </select>
+        <select id="payrollYear" onchange="payrollPage.loadPayroll()">
+            <!-- سنوات -->
+        </select>
+    </div>
+</div>
+
+<!-- جدول الموظفين -->
+<div class="table-container">
+    <table id="payrollTable">
+        <thead>
+            <tr>
+                <th>الموظف</th>
+                <th>الراتب الأساسي</th>
+                <th>الإضافي</th>
+                <th>الخصومات</th>
+                <th>صافي الراتب</th>
+                <th>الحالة</th>
+                <th width="120">الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- بيانات الموظفين -->
+        </tbody>
+    </table>
+</div>

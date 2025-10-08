@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الميزانية - النظام المحاسبي</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/budget.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- الشريط الجانبي -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-chart-pie"></i> المحاسبة</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="../index.html" class="nav-item">
+                    <i class="fas fa-home"></i> لوحة التحكم
+                </a>
+                <a href="invoices.html" class="nav-item">
+                    <i class="fas fa-file-invoice"></i> الفواتير
+                </a>
+                <a href="expenses.html" class="nav-item">
+                    <i class="fas fa-receipt"></i> المصروفات
+                </a>
+                <a href="customers.html" class="nav-item">
+                    <i class="fas fa-users"></i> العملاء
+                </a>
+                <a href="budget.html" class="nav-item active">
+                    <i class="fas fa-money-bill-wave"></i> الميزانية
+                </a>
+                <a href="inventory.html" class="nav-item">
+                    <i class="fas fa-boxes"></i> المخزون
+                </a>
+                <a href="accounting.html" class="nav-item">
+                    <i class="fas fa-book"></i> المحاسبة
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i> المشاريع
+                </a>
+                <a href="payroll.html" class="nav-item">
+                    <i class="fas fa-money-check"></i> الرواتب
+                </a>
+                <a href="pos.html" class="nav-item">
+                    <i class="fas fa-cash-register"></i> نقاط البيع
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i> التقارير
+                </a>
+                <a href="ai-dashboard.html" class="nav-item">
+                    <i class="fas fa-robot"></i> الذكاء الاصطناعي
+                </a>
+                <a href="integrations.html" class="nav-item">
+                    <i class="fas fa-plug"></i> التكاملات
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i> الإعدادات
+                </a>
+            </nav>
+        </div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1>إدارة الميزانية</h1>
+                    <div class="breadcrumb">
+                        <span>الرئيسية</span>
+                        <i class="fas fa-chevron-left"></i>
+                        <span>الميزانية</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <button class="btn btn-primary" onclick="budgetPage.createBudget()">
+                        <i class="fas fa-plus"></i> ميزانية جديدة
+                    </button>
+                    <button class="btn btn-success" onclick="budgetPage.exportBudget()">
+                        <i class="fas fa-download"></i> تصدير
+                    </button>
+                </div>
+            </div>
+
+            <!-- تبويبات الميزانية -->
+            <div class="budget-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="budgetPage.showTab('overview')">نظرة عامة</button>
+                    <button class="tab-btn" onclick="budgetPage.showTab('planning')">التخطيط</button>
+                    <button class="tab-btn" onclick="budgetPage.showTab('tracking')">المتابعة</button>
+                    <button class="tab-btn" onclick="budgetPage.showTab('reports')">تقارير الميزانية</button>
+                </div>
+
+                <div class="tab-content active" id="overviewTab">
+                    <!-- بطاقات نظرة عامة -->
+                    <div class="cards">
+                        <div class="card">
+                            <h3>الميزانية السنوية</h3>
+                            <div class="amount" id="annualBudget">0 ر.س</div>
+                            <div class="sub-text" id="budgetPeriod">2024</div>
+                        </div>
+                        <div class="card revenue">
+                            <h3>المصروفات الفعلية</h3>
+                            <div class="amount" id="actualExpenses">0 ر.س</div>
+                            <div class="trend" id="expensesTrend">0%</div>
+                        </div>
+                        <div class="card success">
+                            <h3>الإيرادات الفعلية</h3>
+                            <div class="amount" id="actualRevenue">0 ر.س</div>
+                            <div class="trend" id="revenueTrend">0%</div>
+                        </div>
+                        <div class="card warning">
+                            <h3>الانحراف</h3>
+                            <div class="amount" id="variance">0%</div>
+                            <div class="sub-text">عن الميزانية</div>
+                        </div>
+                    </div>
+
+                    <!-- مخططات الميزانية -->
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>الميزانية vs المصروفات الفعلية</h3>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="budgetVsActualChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>توزيع الميزانية</h3>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="budgetDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تنبيهات الميزانية -->
+                    <div class="alerts-section">
+                        <h3>تنبيهات الميزانية</h3>
+                        <div id="budgetAlerts">
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div class="alert-content">
+                                    <strong>تجاوز الميزانية</strong>
+                                    <p>المصروفات الإدارية تجاوزت الميزانية المخطط لها بنسبة 15%</p>
+                                </div>
+                                <button class="btn btn-sm">عرض التفاصيل</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="planningTab">
+                    <div class="planning-section">
+                        <h3>تخطيط الميزانية</h3>
+                        <div class="form-container">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="budgetYear">السنة</label>
+                                    <select id="budgetYear" class="form-control">
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="budgetType">نوع الميزانية</label>
+                                    <select id="budgetType" class="form-control">
+                                        <option value="operational">تشغيلية</option>
+                                        <option value="capital">رأسمالية</option>
+                                        <option value="cash">نقدية</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="budget-items">
+                                <h4>بنود الميزانية</h4>
+                                <div class="table-responsive">
+                                    <table id="budgetItemsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>البند</th>
+                                                <th>الميزانية</th>
+                                                <th>الفعلي</th>
+                                                <th>الانحراف</th>
+                                                <th>النسبة</th>
+                                                <th width="100">الإجراءات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>رواتب</td>
+                                                <td>50,000 ر.س</td>
+                                                <td>48,000 ر.س</td>
+                                                <td style="color: #27ae60;">-2,000 ر.س</td>
+                                                <td>96%</td>
+                                                <td>
+                                                    <button class="btn btn-sm"><i class="fas fa-edit"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="trackingTab">
+                    <div class="tracking-section">
+                        <h3>متابعة الميزانية</h3>
+                        <div class="tracking-cards">
+                            <div class="tracking-card">
+                                <h4>الإيرادات</h4>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                                <div class="tracking-numbers">
+                                    <span>75,000 ر.س</span>
+                                    <span>من 100,000 ر.س</span>
+                                </div>
+                            </div>
+                            <div class="tracking-card">
+                                <h4>المصروفات</h4>
+                                <div class="progress-bar">
+                                    <div class="progress-fill warning" style="width: 85%"></div>
+                                </div>
+                                <div class="tracking-numbers">
+                                    <span>85,000 ر.س</span>
+                                    <span>من 100,000 ر.س</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="reportsTab">
+                    <div class="reports-section">
+                        <h3>تقارير الميزانية</h3>
+                        <div class="reports-grid">
+                            <div class="report-card">
+                                <i class="fas fa-file-pdf"></i>
+                                <h4>تقرير الميزانية الشهرية</h4>
+                                <button class="btn btn-sm">تحميل</button>
+                            </div>
+                            <div class="report-card">
+                                <i class="fas fa-chart-line"></i>
+                                <h4>تحليل الانحرافات</h4>
+                                <button class="btn btn-sm">عرض</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- النماذج -->
+    <div id="budgetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>ميزانية جديدة</h3>
+                <button class="close" onclick="budgetPage.closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- محتوى النموذج -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/chart.min.js"></script>
+    <script src="../assets/js/budget.js"></script>
+</body>
+</html>

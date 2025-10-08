@@ -1,0 +1,64 @@
+<div class="header">
+    <div>
+        <h1>إدارة المشاريع</h1>
+        <div class="breadcrumb">
+            <span>الرئيسية</span>
+            <i class="fas fa-chevron-left"></i>
+            <span>المشاريع</span>
+        </div>
+    </div>
+    <div class="user-info">
+        <button class="btn btn-primary" onclick="projectsPage.createProject()">
+            <i class="fas fa-plus"></i> مشروع جديد
+        </button>
+        <button class="btn btn-success" onclick="projectsPage.exportProjects()">
+            <i class="fas fa-download"></i> تصدير
+        </button>
+    </div>
+</div>
+
+<!-- عرض Kanban -->
+<div class="project-view">
+    <div class="view-options">
+        <button class="btn btn-sm active" onclick="projectsPage.setView('kanban')">
+            <i class="fas fa-th-large"></i> Kanban
+        </button>
+        <button class="btn btn-sm" onclick="projectsPage.setView('list')">
+            <i class="fas fa-list"></i> قائمة
+        </button>
+        <button class="btn btn-sm" onclick="projectsPage.setView('gantt')">
+            <i class="fas fa-chart-bar"></i> Gantt
+        </button>
+    </div>
+
+    <div class="kanban-board" id="kanbanBoard">
+        <div class="kanban-column">
+            <div class="column-header">
+                <h4>مخطط</h4>
+                <span class="task-count">0</span>
+            </div>
+            <div class="tasks-list" id="plannedTasks"></div>
+        </div>
+        <div class="kanban-column">
+            <div class="column-header">
+                <h4>قيد التنفيذ</h4>
+                <span class="task-count">0</span>
+            </div>
+            <div class="tasks-list" id="inProgressTasks"></div>
+        </div>
+        <div class="kanban-column">
+            <div class="column-header">
+                <h4>مراجعة</h4>
+                <span class="task-count">0</span>
+            </div>
+            <div class="tasks-list" id="reviewTasks"></div>
+        </div>
+        <div class="kanban-column">
+            <div class="column-header">
+                <h4>مكتمل</h4>
+                <span class="task-count">0</span>
+            </div>
+            <div class="tasks-list" id="completedTasks"></div>
+        </div>
+    </div>
+</div>

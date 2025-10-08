@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحاسبة المتقدمة - النظام المحاسبي</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/accounting.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- الشريط الجانبي (نفس الهيكل) -->
+        <div class="sidebar">...</div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1>المحاسبة المتقدمة</h1>
+                    <div class="breadcrumb">
+                        <span>الرئيسية</span>
+                        <i class="fas fa-chevron-left"></i>
+                        <span>المحاسبة</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <button class="btn btn-primary" onclick="accountingPage.createJournal()">
+                        <i class="fas fa-plus"></i> قيد جديد
+                    </button>
+                    <button class="btn btn-success" onclick="accountingPage.generateFinancialStatements()">
+                        <i class="fas fa-file-invoice"></i> قوائم مالية
+                    </button>
+                </div>
+            </div>
+
+            <!-- الدورة المحاسبية -->
+            <div class="accounting-cycle">
+                <div class="cycle-steps">
+                    <div class="step active" onclick="accountingPage.showStep('journal')">
+                        <div class="step-icon">1</div>
+                        <span>قيود اليومية</span>
+                    </div>
+                    <div class="step" onclick="accountingPage.showStep('ledger')">
+                        <div class="step-icon">2</div>
+                        <span>دفتر الأستاذ</span>
+                    </div>
+                    <div class="step" onclick="accountingPage.showStep('trial')">
+                        <div class="step-icon">3</div>
+                        <span>ميزان المراجعة</span>
+                    </div>
+                    <div class="step" onclick="accountingPage.showStep('financial')">
+                        <div class="step-icon">4</div>
+                        <span>القوائم المالية</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- محتوى الخطوات -->
+            <div class="step-content active" id="journalStep">
+                <div class="step-header">
+                    <h3>قيود اليومية</h3>
+                    <button class="btn btn-primary btn-sm" onclick="accountingPage.showJournalForm()">
+                        <i class="fas fa-plus"></i> إضافة قيد
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-responsive">
+                        <table id="journalTable">
+                            <thead>
+                                <tr>
+                                    <th>رقم القيد</th>
+                                    <th>التاريخ</th>
+                                    <th>الوصف</th>
+                                    <th>الحساب المدين</th>
+                                    <th>المبلغ المدين</th>
+                                    <th>الحساب الدائن</th>
+                                    <th>المبلغ الدائن</th>
+                                    <th width="100">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>J-001</td>
+                                    <td>2024-01-15</td>
+                                    <td>شراء معدات مكتبية</td>
+                                    <td>معدات مكتبية</td>
+                                    <td>5,000 ر.س</td>
+                                    <td>البنك</td>
+                                    <td>5,000 ر.س</td>
+                                    <td>
+                                        <button class="btn btn-sm"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-content" id="ledgerStep">
+                <div class="step-header">
+                    <h3>دفتر الأستاذ</h3>
+                </div>
+                <!-- محتوى دفتر الأستاذ -->
+            </div>
+
+            <div class="step-content" id="trialStep">
+                <div class="step-header">
+                    <h3>ميزان المراجعة</h3>
+                </div>
+                <!-- محتوى ميزان المراجعة -->
+            </div>
+
+            <div class="step-content" id="financialStep">
+                <div class="step-header">
+                    <h3>القوائم المالية</h3>
+                </div>
+                
+                <div class="financial-statements">
+                    <div class="statement-card">
+                        <h4>قائمة الدخل</h4>
+                        <div class="statement-content">
+                            <div class="statement-row">
+                                <span>الإيرادات</span>
+                                <span>150,000 ر.س</span>
+                            </div>
+                            <div class="statement-row">
+                                <span>المصروفات</span>
+                                <span>85,000 ر.س</span>
+                            </div>
+                            <div class="statement-row total">
+                                <span>صافي الدخل</span>
+                                <span>65,000 ر.س</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="statement-card">
+                        <h4>الميزانية العمومية</h4>
+                        <div class="statement-content">
+                            <div class="statement-section">
+                                <h5>الأصول</h5>
+                                <div class="statement-row">
+                                    <span>الأصول المتداولة</span>
+                                    <span>75,000 ر.س</span>
+                                </div>
+                                <div class="statement-row">
+                                    <span>الأصول الثابتة</span>
+                                    <span>120,000 ر.س</span>
+                                </div>
+                            </div>
+                            <div class="statement-section">
+                                <h5>الخصوم وحقوق الملكية</h5>
+                                <div class="statement-row">
+                                    <span>الخصوم المتداولة</span>
+                                    <span>45,000 ر.س</span>
+                                </div>
+                                <div class="statement-row">
+                                    <span>حقوق الملكية</span>
+                                    <span>150,000 ر.س</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج قيد اليومية -->
+    <div id="journalModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>قيد يومية جديد</h3>
+                <button class="close" onclick="accountingPage.closeJournalForm()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="journalForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="journalDate">التاريخ *</label>
+                            <input type="date" id="journalDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="journalNumber">رقم القيد</label>
+                            <input type="text" id="journalNumber" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="journalDescription">الوصف *</label>
+                        <textarea id="journalDescription" required></textarea>
+                    </div>
+
+                    <div class="journal-entries">
+                        <h4>بنود القيد</h4>
+                        <div class="entry-row">
+                            <select class="account-select" required>
+                                <option value="">اختر الحساب</option>
+                            </select>
+                            <select class="entry-type" required>
+                                <option value="debit">مدين</option>
+                                <option value="credit">دائن</option>
+                            </select>
+                            <input type="number" class="entry-amount" step="0.01" required>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="accountingPage.removeEntry(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-sm" onclick="accountingPage.addEntry()">
+                            <i class="fas fa-plus"></i> إضافة بند
+                        </button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="accountingPage.saveJournal()">
+                            <i class="fas fa-save"></i> حفظ القيد
+                        </button>
+                        <button type="button" class="btn" onclick="accountingPage.closeJournalForm()">
+                            إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/accounting.js"></script>
+</body>
+</html>
