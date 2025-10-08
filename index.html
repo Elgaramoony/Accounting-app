@@ -4,225 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>النظام المحاسبي المتكامل</title>
-    <link rel="stylesheet" href="src/assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* أنماط مؤقتة حتى يتم تحميل main.css */
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --danger-color: #e74c3c;
-            --warning-color: #f39c12;
-            --text-color: #2c3e50;
-            --border-color: #bdc3c7;
-            --background-color: #f8f9fa;
-            --surface-color: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* أنماط إضافية للصفحة الرئيسية */
+        .hero-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .landing-container {
-            background: var(--surface-color);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            max-width: 1200px;
-            width: 100%;
-            animation: fadeIn 1s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .landing-header {
-            background: linear-gradient(135deg, var(--primary-color), #2980b9);
             color: white;
-            padding: 40px;
+            padding: 80px 40px;
             text-align: center;
+            border-radius: 20px;
+            margin-bottom: 40px;
         }
-
-        .landing-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+        
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
         }
-
-        .landing-header p {
-            font-size: 1.2rem;
+        
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
             opacity: 0.9;
         }
-
-        .landing-content {
-            padding: 40px;
+        
+        .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
         }
-
-        .features-section h2, .quick-access-section h2 {
-            color: var(--text-color);
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background: var(--background-color);
-            border-radius: 10px;
+        
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
         }
-
-        .feature-item:hover {
-            transform: translateY(-2px);
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--primary-color);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
         }
-
-        .quick-access-grid {
+        
+        .quick-actions {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
         }
-
-        .access-card {
-            background: var(--background-color);
-            padding: 20px;
-            border-radius: 10px;
+        
+        .action-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
             text-decoration: none;
-            color: var(--text-color);
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
-
-        .access-card:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2);
+        
+        .action-card:hover {
+            border-color: #3498db;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2);
         }
-
-        .access-card h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        
+        .action-card i {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .action-card h3 {
             margin-bottom: 10px;
+            color: #2c3e50;
         }
-
-        .stats-section {
-            background: var(--background-color);
-            padding: 30px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 20px;
-            background: var(--surface-color);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .btn:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: var(--secondary-color);
-        }
-
-        .btn-success:hover {
-            background: #27ae60;
-        }
-
+        
         .language-switcher {
             position: absolute;
             top: 20px;
             left: 20px;
         }
-
+        
         .lang-btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: rgba(255,255,255,0.2);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
-
-        @media (max-width: 768px) {
-            .landing-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+        
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
     </style>
 </head>
@@ -234,160 +121,202 @@
         </button>
     </div>
 
-    <div class="landing-container">
-        <!-- الهيدر -->
-        <div class="landing-header">
-            <h1>النظام المحاسبي المتكامل</h1>
-            <p>حل متكامل لإدارة الشؤون المالية للشركات الصغيرة والمتوسطة</p>
-        </div>
+    <div class="app-container">
+        <!-- الشريط الجانبي -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-calculator"></i> النظام المحاسبي</h2>
+                <p>حل متكامل للشركات</p>
+            </div>
+            
+            <div class="nav-items">
+                <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+                <a href="#invoices" class="nav-item" onclick="showSection('invoices')">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>الفواتير</span>
+                </a>
+                <a href="#expenses" class="nav-item" onclick="showSection('expenses')">
+                    <i class="fas fa-receipt"></i>
+                    <span>المصروفات</span>
+                </a>
+                <a href="#customers" class="nav-item" onclick="showSection('customers')">
+                    <i class="fas fa-users"></i>
+                    <span>العملاء</span>
+                </a>
+                <a href="#reports" class="nav-item" onclick="showSection('reports')">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>التقارير</span>
+                </a>
+                <a href="pages/dashboard.html" class="nav-item">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>نسخة كاملة</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <a href="mobile/index.html" class="nav-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>تطبيق الجوال</span>
+                </a>
+            </div>
+        </nav>
 
         <!-- المحتوى الرئيسي -->
-        <div class="landing-content">
-            <!-- قسم المميزات -->
-            <div class="features-section">
-                <h2><i class="fas fa-star"></i> المميزات الرئيسية</h2>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-file-invoice"></i>
-                        </div>
-                        <span>إدارة الفواتير</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-receipt"></i>
-                        </div>
-                        <span>تتبع المصروفات</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <span>إدارة العملاء</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-boxes"></i>
-                        </div>
-                        <span>مراقبة المخزون</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <span>تقارير متقدمة</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <span>تطبيق جوال</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <span>ذكاء اصطناعي</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-plug"></i>
-                        </div>
-                        <span>تكاملات خارجية</span>
+        <main class="main-content">
+            <!-- قسم لوحة التحكم -->
+            <section id="dashboard" class="content-section active">
+                <div class="hero-section">
+                    <h1>مرحباً بك في النظام المحاسبي المتكامل</h1>
+                    <p>حل متكامل لإدارة الشؤون المالية للشركات الصغيرة والمتوسطة</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="pages/dashboard.html" class="btn btn-primary">
+                            <i class="fas fa-play"></i> ابدأ الاستخدام
+                        </a>
+                        <a href="mobile/index.html" class="btn btn-secondary">
+                            <i class="fas fa-mobile-alt"></i> تطبيق الجوال
+                        </a>
                     </div>
                 </div>
-            </div>
 
-            <!-- الوصول السريع -->
-            <div class="quick-access-section">
-                <h2><i class="fas fa-rocket"></i> ابدأ الآن</h2>
-                <div class="quick-access-grid">
-                    <a href="src/pages/dashboard.html" class="access-card">
-                        <h3><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h3>
-                        <p>نظرة عامة على أداء عملك المالي</p>
-                    </a>
-                    
-                    <a href="src/pages/invoices.html" class="access-card">
-                        <h3><i class="fas fa-file-invoice"></i> إدارة الفواتير</h3>
+                <!-- الإحصائيات -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div>وحدة متكاملة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div>مجاني ومفتوح المصدر</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">٢٤/٧</div>
+                        <div>دعم فني</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">PWA</div>
+                        <div>تطبيق ويب تقدمي</div>
+                    </div>
+                </div>
+
+                <!-- الإجراءات السريعة -->
+                <h2 style="text-align: center; margin: 40px 0 20px;">الإجراءات السريعة</h2>
+                <div class="quick-actions">
+                    <a href="pages/invoices.html" class="action-card">
+                        <i class="fas fa-file-invoice"></i>
+                        <h3>إدارة الفواتير</h3>
                         <p>إنشاء وإدارة الفواتير والمدفوعات</p>
                     </a>
-                    
-                    <a href="src/pages/expenses.html" class="access-card">
-                        <h3><i class="fas fa-receipt"></i> المصروفات</h3>
+                    <a href="pages/expenses.html" class="action-card">
+                        <i class="fas fa-receipt"></i>
+                        <h3>المصروفات</h3>
                         <p>تتبع ومتابعة النفقات التشغيلية</p>
                     </a>
-                    
-                    <a href="src/pages/customers.html" class="access-card">
-                        <h3><i class="fas fa-users"></i> العملاء</h3>
+                    <a href="pages/customers.html" class="action-card">
+                        <i class="fas fa-users"></i>
+                        <h3>العملاء</h3>
                         <p>إدارة قاعدة عملاء متكاملة</p>
                     </a>
-
-                    <a href="src/mobile/index.html" class="access-card">
-                        <h3><i class="fas fa-mobile-alt"></i> تطبيق الجوال</h3>
-                        <p>استخدم النظام على هاتفك المحمول</p>
+                    <a href="pages/reports.html" class="action-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>التقارير</h3>
+                        <p>تقارير مالية متقدمة وتحليلات</p>
                     </a>
                 </div>
+            </section>
 
-                <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
-                    <a href="src/pages/dashboard.html" class="btn">
-                        <i class="fas fa-play"></i> ابدأ الاستخدام
+            <!-- قسم الفواتير -->
+            <section id="invoices" class="content-section">
+                <div class="section-header">
+                    <h1><i class="fas fa-file-invoice"></i> إدارة الفواتير</h1>
+                    <p>نظام متكامل لإدارة الفواتير والمبيعات</p>
+                </div>
+                
+                <div class="quick-actions">
+                    <a href="pages/invoices.html" class="action-card">
+                        <i class="fas fa-plus"></i>
+                        <h3>فاتورة جديدة</h3>
+                        <p>إنشاء فاتورة جديدة للعملاء</p>
                     </a>
-                    <a href="#demo" class="btn btn-success" onclick="showDemo()">
-                        <i class="fas fa-eye"></i> عرض تجريبي
+                    <a href="pages/invoices.html" class="action-card">
+                        <i class="fas fa-list"></i>
+                        <h3>عرض الفواتير</h3>
+                        <p>عرض وإدارة جميع الفواتير</p>
+                    </a>
+                    <a href="pages/invoices.html" class="action-card">
+                        <i class="fas fa-search"></i>
+                        <h3>بحث الفواتير</h3>
+                        <p>البحث في الفواتير السابقة</p>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- الإحصائيات -->
-        <div class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">15+</div>
-                    <div>وحدة متكاملة</div>
+            <!-- قسم المصروفات -->
+            <section id="expenses" class="content-section">
+                <div class="section-header">
+                    <h1><i class="fas fa-receipt"></i> إدارة المصروفات</h1>
+                    <p>تتبع ومتابعة النفقات التشغيلية</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">100%</div>
-                    <div>مجاني ومفتوح المصدر</div>
+                
+                <div class="quick-actions">
+                    <a href="pages/expenses.html" class="action-card">
+                        <i class="fas fa-plus"></i>
+                        <h3>إضافة مصروف</h3>
+                        <p>تسجيل مصروف جديد</p>
+                    </a>
+                    <a href="pages/expenses.html" class="action-card">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>تحليل المصروفات</h3>
+                        <p>تحليل توزيع النفقات</p>
+                    </a>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">٢٤/٧</div>
-                    <div>دعم فني</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">PWA</div>
-                    <div>تطبيق ويب تقدمي</div>
-                </div>
-            </div>
-        </div>
-    </div>
+            </section>
 
-    <!-- نموذج الدخول -->
-    <div id="loginModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>تسجيل الدخول</h3>
-                <button class="close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="email">البريد الإلكتروني</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">كلمة المرور</label>
-                        <input type="password" id="password" required>
-                    </div>
-                    <button type="submit" class="btn" style="width: 100%;">
-                        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-                    </button>
-                </form>
-                <div style="text-align: center; margin-top: 15px;">
-                    <p>لا تملك حساب؟ <a href="#" onclick="showRegister()">إنشاء حساب</a></p>
+            <!-- قسم العملاء -->
+            <section id="customers" class="content-section">
+                <div class="section-header">
+                    <h1><i class="fas fa-users"></i> إدارة العملاء</h1>
+                    <p>قاعدة عملاء متكاملة مع سجل التعاملات</p>
                 </div>
-            </div>
-        </div>
+                
+                <div class="quick-actions">
+                    <a href="pages/customers.html" class="action-card">
+                        <i class="fas fa-user-plus"></i>
+                        <h3>عميل جديد</h3>
+                        <p>إضافة عميل جديد للنظام</p>
+                    </a>
+                    <a href="pages/customers.html" class="action-card">
+                        <i class="fas fa-address-book"></i>
+                        <h3>دليل العملاء</h3>
+                        <p>عرض جميع العملاء</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- قسم التقارير -->
+            <section id="reports" class="content-section">
+                <div class="section-header">
+                    <h1><i class="fas fa-chart-bar"></i> التقارير المالية</h1>
+                    <p>تقارير متقدمة وتحليلات شاملة</p>
+                </div>
+                
+                <div class="quick-actions">
+                    <a href="pages/reports.html" class="action-card">
+                        <i class="fas fa-file-pdf"></i>
+                        <h3>التقرير المالي</h3>
+                        <p>تقرير مالي شامل</p>
+                    </a>
+                    <a href="pages/reports.html" class="action-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>تحليل المبيعات</h3>
+                        <p>تحليل أداء المبيعات</p>
+                    </a>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script>
@@ -399,126 +328,120 @@
             document.documentElement.lang = newLang;
             document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
             
-            // تحديث النصوص (في التطبيق الحقيقي سيستخدم نظام i18n)
+            // تحديث النصوص
             if (newLang === 'en') {
-                document.querySelector('.landing-header h1').textContent = 'Integrated Accounting System';
-                document.querySelector('.landing-header p').textContent = 'Complete financial management solution for SMEs';
                 document.querySelector('.lang-btn').innerHTML = '<i class="fas fa-language"></i> العربية';
-                document.querySelector('.features-section h2').innerHTML = '<i class="fas fa-star"></i> Key Features';
-                document.querySelector('.quick-access-section h2').innerHTML = '<i class="fas fa-rocket"></i> Get Started';
-                // ... تحديث بقية النصوص
+                // يمكن إضافة المزيد من الترجمات هنا
             } else {
-                document.querySelector('.landing-header h1').textContent = 'النظام المحاسبي المتكامل';
-                document.querySelector('.landing-header p').textContent = 'حل متكامل لإدارة الشؤون المالية للشركات الصغيرة والمتوسطة';
                 document.querySelector('.lang-btn').innerHTML = '<i class="fas fa-language"></i> English';
-                document.querySelector('.features-section h2').innerHTML = '<i class="fas fa-star"></i> المميزات الرئيسية';
-                document.querySelector('.quick-access-section h2').innerHTML = '<i class="fas fa-rocket"></i> ابدأ الآن';
             }
         }
 
-        // دالة العرض التجريبي
-        function showDemo() {
-            alert('سيتم فتح العرض التجريبي قريباً...\n\nيمكنك تجربة النظام من خلال الضغط على "ابدأ الاستخدام"');
-        }
-
-        // دالة إظهار نموذج الدخول
-        function showLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-
-        // دالة إغلاق النموذج
-        function closeModal() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-
-        // معالجة نموذج الدخول
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        // دالة إظهار الأقسام
+        function showSection(sectionId) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
             
-            // محاكاة عملية الدخول
-            if (email && password) {
-                alert('تم الدخول بنجاح! يتم التوجيه إلى لوحة التحكم...');
-                window.location.href = 'src/pages/dashboard.html';
-            }
+            // إلغاء تنشيط جميع روابط التنقل
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // إظهار القسم المطلوب
+            document.getElementById(sectionId).classList.add('active');
+            
+            // تنشيط رابط التنقل
+            document.querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`).classList.add('active');
+            
+            // تحديث عنوان URL
+            window.location.hash = sectionId;
+        }
+
+        // تحميل القسم من الرابط
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.substring(1) || 'dashboard';
+            showSection(hash);
         });
 
-        // إغلاق النموذج عند النقر خارج المحتوى
-        window.addEventListener('click', function(e) {
-            const modal = document.getElementById('loginModal');
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // إضافة أنماط الـ modal
-        const style = document.createElement('style');
-        style.textContent = `
-            .modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1000;
-            }
-            
-            .modal-content {
-                background: white;
-                border-radius: 10px;
-                width: 90%;
-                max-width: 400px;
-                animation: slideIn 0.3s ease;
-            }
-            
-            @keyframes slideIn {
-                from { transform: translateY(-50px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-            }
-            
-            .modal-header {
+        // إضافة أنماط إضافية
+        const additionalStyles = `
+            .sidebar-header {
                 padding: 20px;
                 border-bottom: 1px solid #eee;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+                text-align: center;
             }
             
-            .modal-body {
-                padding: 20px;
-            }
-            
-            .close {
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                cursor: pointer;
-            }
-            
-            .form-group {
-                margin-bottom: 15px;
-            }
-            
-            .form-group label {
-                display: block;
+            .sidebar-header h2 {
                 margin-bottom: 5px;
-                font-weight: 500;
+                color: #3498db;
             }
             
-            .form-group input {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                font-size: 1rem;
+            .sidebar-header p {
+                color: #666;
+                font-size: 0.9rem;
+            }
+            
+            .nav-items {
+                padding: 20px 0;
+            }
+            
+            .nav-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 15px 20px;
+                color: #333;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                border-right: 3px solid transparent;
+            }
+            
+            .nav-item:hover, .nav-item.active {
+                background: #f8f9fa;
+                border-right-color: #3498db;
+                color: #3498db;
+            }
+            
+            .sidebar-footer {
+                border-top: 1px solid #eee;
+                padding: 20px 0;
+            }
+            
+            .content-section {
+                display: none;
+                animation: fadeIn 0.5s ease;
+            }
+            
+            .content-section.active {
+                display: block;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .section-header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+            
+            .section-header h1 {
+                color: #2c3e50;
+                margin-bottom: 10px;
+            }
+            
+            .section-header p {
+                color: #666;
+                font-size: 1.1rem;
             }
         `;
-        document.head.appendChild(style);
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = additionalStyles;
+        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
