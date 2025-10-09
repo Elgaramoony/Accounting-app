@@ -47,7 +47,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* شريط التنقل */
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home')">الرئيسية</button>
+    <button class="nav-btn" onclick="showPage('dashboard')">لوحة التحكم</button>
+    <button class="nav-btn" onclick="showPage('invoices')">الفواتير</button>
+    <button class="nav-btn" onclick="showPage('expenses')">المصروفات</button>
+    <button class="nav-btn" onclick="showPage('customers')">العملاء</button>
+    <button class="nav-btn" onclick="showPage('budget')">الميزانية</button>
+    <button class="nav-btn" onclick="showPage('inventory')">المخزون</button>
+    <button class="nav-btn" onclick="showPage('accounting')">المحاسبة</button>
+    <button class="nav-btn" onclick="showPage('projects')">المشاريع</button>
+    <button class="nav-btn" onclick="showPage('reports')">التقارير</button>
+    <button class="nav-btn" onclick="showPage('settings')">الإعدادات</button>
+</div>      /* شريط التنقل */
         .navbar {
             background: var(--surface-color);
             padding: 15px 20px;
@@ -70,27 +82,7 @@
             text-decoration: none;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            padding: 10px 20px;
-            background: none;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--primary-color);
-            color: white;
-        }
+        
 
         /* الحاوية */
         .container {
@@ -422,7 +414,437 @@
             </div>
         </div>
     </div>
+<!-- صفحة الميزانية -->
+<div id="budget" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-money-bill-wave"></i> إدارة الميزانية</h1>
+            <p>التخطيط المالي ومتابعة الأداء مقابل المخطط</p>
+        </div>
 
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>الميزانية المخطط لها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>المصروفات الفعلية</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0%</div>
+                <div>نسبة التنفيذ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>الانحراف</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-btn" onclick="alert('إنشاء ميزانية جديدة')">
+                <i class="fas fa-plus"></i>
+                <span>ميزانية جديدة</span>
+            </div>
+            <div class="action-btn" onclick="alert('عرض تقارير الميزانية')">
+                <i class="fas fa-chart-pie"></i>
+                <span>تقارير الميزانية</span>
+            </div>
+            <div class="action-btn" onclick="alert('متابعة التنفيذ')">
+                <i class="fas fa-chart-line"></i>
+                <span>متابعة التنفيذ</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة المخزون -->
+<div id="inventory" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-boxes"></i> إدارة المخزون</h1>
+            <p>مراقبة المخزون وتتبع الحركات</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div>إجمالي المنتجات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>قيمة المخزون</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div>منتجات منخفضة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div>منتجات منتهية</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-btn" onclick="alert('إضافة منتج جديد')">
+                <i class="fas fa-plus"></i>
+                <span>منتج جديد</span>
+            </div>
+            <div class="action-btn" onclick="alert('تعديل المخزون')">
+                <i class="fas fa-edit"></i>
+                <span>تعديل المخزون</span>
+            </div>
+            <div class="action-btn" onclick="alert('عرض تقارير المخزون')">
+                <i class="fas fa-chart-bar"></i>
+                <span>تقارير المخزون</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة المحاسبة -->
+<div id="accounting" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-book"></i> المحاسبة المتقدمة</h1>
+            <p>نظام محاسبي متكامل وفق المعايير الدولية</p>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-btn" onclick="alert('فتح دفتر اليومية')">
+                <i class="fas fa-book-open"></i>
+                <span>دفتر اليومية</span>
+            </div>
+            <div class="action-btn" onclick="alert('فتح دفتر الأستاذ')">
+                <i class="fas fa-book"></i>
+                <span>دفتر الأستاذ</span>
+            </div>
+            <div class="action-btn" onclick="alert('عرض ميزان المراجعة')">
+                <i class="fas fa-balance-scale"></i>
+                <span>ميزان المراجعة</span>
+            </div>
+            <div class="action-btn" onclick="alert('إعداد القوائم المالية')">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>القوائم المالية</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <h3 style="text-align: center; margin-bottom: 20px;">الدورة المحاسبية</h3>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: #3498db; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: bold;">1</div>
+                    <div>قيود اليومية</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: #2ecc71; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: bold;">2</div>
+                    <div>دفتر الأستاذ</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: #e74c3c; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: bold;">3</div>
+                    <div>ميزان المراجعة</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: #f39c12; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: bold;">4</div>
+                    <div>القوائم المالية</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة المشاريع -->
+<div id="projects" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-project-diagram"></i> إدارة المشاريع</h1>
+            <p>تتبع التكاليف والإيرادات لكل مشروع</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div>المشاريع النشطة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>إجمالي ميزانية المشاريع</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>التكاليف الفعلية</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0%</div>
+                <div>متوسط إنجاز المشاريع</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-btn" onclick="alert('إنشاء مشروع جديد')">
+                <i class="fas fa-plus"></i>
+                <span>مشروع جديد</span>
+            </div>
+            <div class="action-btn" onclick="alert('عرض جميع المشاريع')">
+                <i class="fas fa-list"></i>
+                <span>عرض المشاريع</span>
+            </div>
+            <div class="action-btn" onclick="alert('تقارير أداء المشاريع')">
+                <i class="fas fa-chart-line"></i>
+                <span>تقارير المشاريع</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة الرواتب -->
+<div id="payroll" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-money-check"></i> إدارة الرواتب</h1>
+            <p>نظام متكامل لإدارة رواتب الموظفين</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div>عدد الموظفين</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>إجمالي الرواتب</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>إجمالي الاستقطاعات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0 ر.س</div>
+                <div>صافي الرواتب</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-btn" onclick="alert('إضافة موظف جديد')">
+                <i class="fas fa-user-plus"></i>
+                <span>موظف جديد</span>
+            </div>
+            <div class="action-btn" onclick="alert('حساب الرواتب')">
+                <i class="fas fa-calculator"></i>
+                <span>حساب الرواتب</span>
+            </div>
+            <div class="action-btn" onclick="alert('كشوف المرتبات')">
+                <i class="fas fa-file-invoice"></i>
+                <span>كشوف المرتبات</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة نقاط البيع -->
+<div id="pos" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-cash-register"></i> نقاط البيع (POS)</h1>
+            <p>نظام مبيعات سريع وفعال</p>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-btn" onclick="alert('بدء عملية بيع جديدة')">
+                <i class="fas fa-cash-register"></i>
+                <span>بيع جديد</span>
+            </div>
+            <div class="action-btn" onclick="alert('عرض سجل المبيعات')">
+                <i class="fas fa-history"></i>
+                <span>سجل المبيعات</span>
+            </div>
+            <div class="action-btn" onclick="alert('إدارة النقاط')">
+                <i class="fas fa-store"></i>
+                <span>إدارة النقاط</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+            <h3 style="text-align: center; margin-bottom: 20px;">💳 لوحة البيع السريع</h3>
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                <div>
+                    <h4>المنتجات</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center; cursor: pointer;" onclick="alert('إضافة منتج 1 إلى السلة')">
+                            <div>منتج 1</div>
+                            <div style="color: #3498db; font-weight: bold;">50 ر.س</div>
+                        </div>
+                        <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center; cursor: pointer;" onclick="alert('إضافة منتج 2 إلى السلة')">
+                            <div>منتج 2</div>
+                            <div style="color: #3498db; font-weight: bold;">75 ر.س</div>
+                        </div>
+                        <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center; cursor: pointer;" onclick="alert('إضافة منتج 3 إلى السلة')">
+                            <div>منتج 3</div>
+                            <div style="color: #3498db; font-weight: bold;">100 ر.س</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h4>سلة المشتريات</h4>
+                    <div style="text-align: center; padding: 40px 20px; color: #666;">
+                        <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <div>السلة فارغة</div>
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 20px;" onclick="alert('معالجة الدفع')">
+                        <i class="fas fa-credit-card"></i> معالجة الدفع
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة الذكاء الاصطناعي -->
+<div id="ai-dashboard" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-robot"></i> الذكاء الاصطناعي</h1>
+            <p>تحليلات متقدمة وتنبؤات ذكية</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card" onclick="alert('فتح تحليل التدفق النقدي')">
+                <i class="fas fa-chart-line"></i>
+                <h3>تحليل التدفق النقدي</h3>
+                <p>تنبؤات ذكية للتدفق النقدي بناءً على البيانات التاريخية</p>
+            </div>
+
+            <div class="feature-card" onclick="alert('فتح تحليل المبيعات')">
+                <i class="fas fa-chart-bar"></i>
+                <h3>تحليل المبيعات</h3>
+                <p>تنبؤات المبيعات وتحديد الاتجاهات الموسمية</p>
+            </div>
+
+            <div class="feature-card" onclick="alert('فتح تحليل المخاطر')">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>تحليل المخاطر</h3>
+                <p>تحديد المخاطر المالية والتشغيلية المحتملة</p>
+            </div>
+
+            <div class="feature-card" onclick="alert('فتح التوصيات الذكية')">
+                <i class="fas fa-lightbulb"></i>
+                <h3>توصيات ذكية</h3>
+                <p>اقتراحات لتحسين الأداء المالي والعمليات</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+            <h3 style="text-align: center; margin-bottom: 20px;">📊 لوحة التحليلات الذكية</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="text-align: center; padding: 20px; background: #e8f5e8; border-radius: 8px;">
+                    <div style="font-size: 2rem; color: #2ecc71;">+15%</div>
+                    <div>نمو متوقع في المبيعات</div>
+                </div>
+                <div style="text-align: center; padding: 20px; background: #ffebee; border-radius: 8px;">
+                    <div style="font-size: 2rem; color: #e74c3c;">-8%</div>
+                    <div>انخفاض متوقع في التكاليف</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة التكاملات -->
+<div id="integrations" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-plug"></i> التكاملات</h1>
+            <p>ربط النظام مع الخدمات والأنظمة الخارجية</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card" onclick="alert('تكامل ZATCA')">
+                <i class="fas fa-receipt"></i>
+                <h3>الزكاة والضريبة (ZATCA)</h3>
+                <p>التكامل مع نظام الضريبة على القيمة المضافة</p>
+                <div style="margin-top: 10px;">
+                    <span style="background: #ffebee; color: #e74c3c; padding: 4px 8px; border-radius: 12px; font-size: 12px;">غير متصل</span>
+                </div>
+            </div>
+
+            <div class="feature-card" onclick="alert('تكامل البنوك')">
+                <i class="fas fa-university"></i>
+                <h3>الخدمات المصرفية</h3>
+                <p>ربط الحسابات البنكية ومزامنة المعاملات</p>
+                <div style="margin-top: 10px;">
+                    <span style="background: #ffebee; color: #e74c3c; padding: 4px 8px; border-radius: 12px; font-size: 12px;">غير متصل</span>
+                </div>
+            </div>
+
+            <div class="feature-card" onclick="alert('تكامل البريد')">
+                <i class="fas fa-envelope"></i>
+                <h3>البريد الإلكتروني</h3>
+                <p>إرسال الفواتير والإشعارات عبر البريد</p>
+                <div style="margin-top: 10px;">
+                    <span style="background: #e8f5e8; color: #2ecc71; padding: 4px 8px; border-radius: 12px; font-size: 12px;">متصل</span>
+                </div>
+            </div>
+
+            <div class="feature-card" onclick="alert('تكامل التخزين السحابي')">
+                <i class="fas fa-cloud"></i>
+                <h3>التخزين السحابي</h3>
+                <p>نسخ احتياطي آمن للبيانات في السحابة</p>
+                <div style="margin-top: 10px;">
+                    <span style="background: #e8f5e8; color: #2ecc71; padding: 4px 8px; border-radius: 12px; font-size: 12px;">متصل</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة الإعدادات -->
+<div id="settings" class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-cog"></i> الإعدادات</h1>
+            <p>تهيئة النظام وإدارة التفضيلات</p>
+        </div>
+
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <h3 style="margin-bottom: 20px;">الإعدادات العامة</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">اسم الشركة</label>
+                    <input type="text" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" value="شركتي">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">العملة</label>
+                    <select style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option>ريال سعودي (ر.س)</option>
+                        <option>دولار أمريكي ($)</option>
+                        <option>يورو (€)</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">اللغة</label>
+                    <select style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option>العربية</option>
+                        <option>English</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" checked>
+                        <span>تفعيل الإشعارات</span>
+                    </label>
+                </div>
+
+                <button class="btn" style="width: 100%;" onclick="alert('تم حفظ الإعدادات')">
+                    <i class="fas fa-save"></i> حفظ الإعدادات
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- صفحة الفواتير -->
     <div id="invoices" class="page">
         <div class="container">
